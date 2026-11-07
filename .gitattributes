@@ -1,0 +1,5 @@
+# Keep release archives (GitHub "Download ZIP", git archive) free of development files.
+/package.sh export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.github export-ignore

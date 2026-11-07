@@ -1,0 +1,27 @@
+{
+  "name": "kelpgate/kelpgate-wordpress-plugin",
+  "type": "wordpress-plugin",
+  "description": "Scans WordPress uploads for malware with the Kelpgate API and blocks infected files.",
+  "keywords": [
+    "wordpress",
+    "security",
+    "antivirus",
+    "malware",
+    "kelpgate",
+    "scanner"
+  ],
+  "homepage": "https://github.com/amithalder21/kelpgate-wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Kelpgate Security Team",
+      "homepage": "https://strapiorbit.cloud"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "extra": {
+    "installer-name": "kelpgate-wordpress-plugin"
+  }
+}

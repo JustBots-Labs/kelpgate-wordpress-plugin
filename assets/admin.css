@@ -1,0 +1,520 @@
+/**
+ * Kelpgate Antivirus - WordPress Admin Stylesheet
+ * Strict adherence to design tokens:
+ *  1. Zero gradients (flat solid surfaces only)
+ *  2. Zero emojis (real inline SVGs only)
+ *  3. No useless badges (clean status dots and minimal pills)
+ *  4. Flattened cards (no nested card-in-card layouts)
+ *  5. Grouped related items (consistent 16px/20px grid spacing)
+ *  6. Exact mathematical radius nesting: R_inner = R_outer - padding
+ *  7. No looping animations (spin animation only while actively requesting)
+ */
+
+:root {
+  --kg-font-ui: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --kg-font-mono: "IBM Plex Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  
+  /* Surfaces & Backgrounds */
+  --kg-bg: #f4f6f8;
+  --kg-surface: #ffffff;
+  --kg-surface-2: #f8fafb;
+  --kg-surface-3: #eef2f4;
+  
+  /* Borders */
+  --kg-border: #e2e8ea;
+  --kg-border-strong: #cdd6d8;
+  
+  /* Typography Colors */
+  --kg-text: #0f1719;
+  --kg-text-2: #3d4d50;
+  --kg-text-3: #637578;
+  
+  /* Brand Accent: Kelp Deep Teal (matches Console) */
+  --kg-accent: #0b6b7a;
+  --kg-accent-hover: #085662;
+  --kg-accent-weak: #e6f3f5;
+  --kg-on-accent: #ffffff;
+  
+  /* Status Semantics */
+  --kg-good: #0ca30c;
+  --kg-good-bg: #eaf7ea;
+  --kg-good-fg: #0a680a;
+  --kg-good-border: #c3e6c3;
+  
+  --kg-warn: #d98200;
+  --kg-warn-bg: #fef4dc;
+  --kg-warn-fg: #804d00;
+  --kg-warn-border: #f7dfa7;
+  
+  --kg-crit: #c92a2a;
+  --kg-crit-bg: #fde8e8;
+  --kg-crit-fg: #9e1b1b;
+  --kg-crit-border: #f5c2c2;
+  
+  --kg-shadow: 0 1px 2px rgba(15, 23, 25, 0.04);
+  
+  /* Mathematical Radius Scale */
+  --kg-r-lg: 8px;   /* Cards */
+  --kg-r-md: 6px;   /* Controls: inputs, buttons, banners */
+  --kg-r-sm: 4px;   /* Sub-elements: pills, codes */
+}
+
+/* Base Wrapper */
+.kelpgate-wrap {
+  max-width: 960px;
+  margin: 24px auto 40px 10px;
+  font-family: var(--kg-font-ui);
+  color: var(--kg-text);
+  font-size: 13.5px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.kelpgate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.kelpgate-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kelpgate-logo-box {
+  width: 36px;
+  height: 36px;
+  background: var(--kg-accent);
+  color: var(--kg-on-accent);
+  border-radius: var(--kg-r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.kelpgate-logo-box svg {
+  width: 20px;
+  height: 20px;
+}
+
+.kelpgate-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--kg-text);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.kelpgate-header p {
+  color: var(--kg-text-3);
+  font-size: 12.5px;
+  margin: 2px 0 0 0;
+}
+
+/* Status Pill (Mathematical R = 4px) */
+.kelpgate-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--kg-r-sm);
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.kelpgate-pill.good {
+  background: var(--kg-good-bg);
+  color: var(--kg-good-fg);
+  border: 1px solid var(--kg-good-border);
+}
+
+.kelpgate-pill.warn {
+  background: var(--kg-warn-bg);
+  color: var(--kg-warn-fg);
+  border: 1px solid var(--kg-warn-border);
+}
+
+.kelpgate-pill.crit {
+  background: var(--kg-crit-bg);
+  color: var(--kg-crit-fg);
+  border: 1px solid var(--kg-crit-border);
+}
+
+.kelpgate-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+}
+
+.kelpgate-dot.good { background: var(--kg-good); }
+.kelpgate-dot.warn { background: var(--kg-warn); }
+.kelpgate-dot.crit { background: var(--kg-crit); }
+
+/* Flat Card System (Outer R = 8px) */
+.kelpgate-card {
+  background: var(--kg-surface);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-r-lg);
+  box-shadow: var(--kg-shadow);
+  margin-bottom: 20px;
+}
+
+.kelpgate-card-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--kg-border);
+  background: var(--kg-surface-2);
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kelpgate-card-header h2 {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--kg-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kelpgate-card-body {
+  padding: 18px;
+}
+
+.kelpgate-card-footer {
+  padding: 12px 18px;
+  background: var(--kg-surface-2);
+  border-top: 1px solid var(--kg-border);
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Form Fields */
+.kelpgate-field-group {
+  margin-bottom: 16px;
+}
+
+.kelpgate-field-group:last-child {
+  margin-bottom: 0;
+}
+
+.kelpgate-field-group label {
+  display: block;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--kg-text);
+  margin-bottom: 5px;
+}
+
+.kelpgate-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--kg-text-3);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.kelpgate-input,
+.kelpgate-select {
+  width: 100%;
+  height: 36px;
+  padding: 0 11px;
+  background: var(--kg-surface);
+  border: 1px solid var(--kg-border-strong);
+  border-radius: var(--kg-r-md);
+  color: var(--kg-text);
+  font-size: 13px;
+  font-family: var(--kg-font-ui);
+  box-shadow: none;
+  transition: border-color .15s ease;
+  box-sizing: border-box;
+}
+
+.kelpgate-input:focus,
+.kelpgate-select:focus {
+  border-color: var(--kg-accent);
+  outline: 2px solid var(--kg-accent-weak);
+  outline-offset: 1px;
+}
+
+.kelpgate-input.mono {
+  font-family: var(--kg-font-mono);
+  font-size: 12.5px;
+}
+
+.kelpgate-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .kelpgate-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Flat Buttons (R = 6px, solid color, no gradient) */
+.kelpgate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--kg-r-md);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color .15s ease, border-color .15s ease;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.kelpgate-btn-primary {
+  background: var(--kg-accent);
+  color: var(--kg-on-accent);
+  border-color: var(--kg-accent);
+}
+
+.kelpgate-btn-primary:hover {
+  background: var(--kg-accent-hover);
+  border-color: var(--kg-accent-hover);
+  color: var(--kg-on-accent);
+}
+
+.kelpgate-btn-secondary {
+  background: var(--kg-surface);
+  color: var(--kg-text);
+  border: 1px solid var(--kg-border);
+}
+
+.kelpgate-btn-secondary:hover {
+  background: var(--kg-surface-2);
+  border-color: var(--kg-border-strong);
+  color: var(--kg-text);
+}
+
+.kelpgate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Precise Inline SVG Icons */
+.kelpgate-ic {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
+
+/* Active Request Spinning Animation Only */
+@keyframes kelpgate-spin {
+  to { transform: rotate(360deg); }
+}
+
+.kelpgate-spinning {
+  animation: kelpgate-spin 0.8s linear infinite;
+}
+
+/* Clean Alert Banners (R = 6px, flat solid, zero gradient) */
+.kelpgate-banner {
+  padding: 11px 14px;
+  border-radius: var(--kg-r-md);
+  margin-bottom: 18px;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--kg-border);
+  background: var(--kg-surface);
+  line-height: 1.45;
+}
+
+.kelpgate-banner.unconfigured {
+  background: var(--kg-warn-bg);
+  color: var(--kg-warn-fg);
+  border-color: var(--kg-warn-border);
+}
+
+.kelpgate-banner.healthy {
+  background: var(--kg-good-bg);
+  color: var(--kg-good-fg);
+  border-color: var(--kg-good-border);
+}
+
+.kelpgate-banner.error {
+  background: var(--kg-crit-bg);
+  color: var(--kg-crit-fg);
+  border-color: var(--kg-crit-border);
+}
+
+/* Incident / Detection Table */
+.kelpgate-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  text-align: left;
+}
+
+.kelpgate-table th {
+  padding: 9px 12px;
+  background: var(--kg-surface-2);
+  border-bottom: 1px solid var(--kg-border);
+  color: var(--kg-text-3);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.kelpgate-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--kg-border);
+  color: var(--kg-text);
+  vertical-align: middle;
+}
+
+.kelpgate-table tr:last-child td {
+  border-bottom: none;
+}
+
+.kelpgate-table code {
+  font-family: var(--kg-font-mono);
+  font-size: 11.5px;
+  background: var(--kg-surface-3);
+  padding: 2px 5px;
+  border-radius: var(--kg-r-sm);
+}
+
+/* Incident Table Pagination */
+.kelpgate-pagination-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 10px 16px !important;
+  background: var(--kg-surface-2) !important;
+  border-top: 1px solid var(--kg-border) !important;
+  font-size: 12.5px !important;
+  color: var(--kg-text-3) !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+  box-sizing: border-box !important;
+}
+
+.kelpgate-pagination-info {
+  font-weight: 500 !important;
+  color: var(--kg-text-2) !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+}
+
+.kelpgate-pagination-controls {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+
+.kelpgate-page-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 5px 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  font-family: var(--kg-font-ui) !important;
+  background: var(--kg-surface) !important;
+  border: 1px solid var(--kg-border) !important;
+  border-radius: var(--kg-r-md) !important;
+  color: var(--kg-text) !important;
+  cursor: pointer !important;
+  line-height: 1.2 !important;
+  height: 30px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  text-decoration: none !important;
+  vertical-align: middle !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+
+.kelpgate-page-btn:hover:not(:disabled) {
+  background: var(--kg-surface-3) !important;
+  border-color: var(--kg-border-strong) !important;
+  color: var(--kg-text) !important;
+}
+
+.kelpgate-page-btn:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  background: var(--kg-surface-2) !important;
+  border-color: var(--kg-border) !important;
+}
+
+.kelpgate-page-numbers {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-wrap: nowrap !important;
+}
+
+.kelpgate-page-num {
+  min-width: 30px !important;
+  height: 30px !important;
+  padding: 0 6px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  font-family: var(--kg-font-ui) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--kg-surface) !important;
+  border: 1px solid var(--kg-border) !important;
+  border-radius: var(--kg-r-md) !important;
+  color: var(--kg-text-2) !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  text-decoration: none !important;
+  vertical-align: middle !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+
+.kelpgate-page-num:hover:not(.active) {
+  background: var(--kg-surface-3) !important;
+  border-color: var(--kg-border-strong) !important;
+  color: var(--kg-text) !important;
+}
+
+.kelpgate-page-num.active {
+  background: var(--kg-accent) !important;
+  border-color: var(--kg-accent) !important;
+  color: var(--kg-on-accent) !important;
+  font-weight: 600 !important;
+  cursor: default !important;
+}
