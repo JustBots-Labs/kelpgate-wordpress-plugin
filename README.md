@@ -4,6 +4,19 @@ Scans files uploaded to WordPress with the [Kelpgate](https://console.strapiorbi
 
 Requires WordPress 5.8+, PHP 7.4+, and a Kelpgate account (client ID and secret from the Kelpgate Console).
 
+## Compatibility
+
+Each combination was installed on a real WordPress and checked: a clean upload is accepted, an EICAR upload is rejected, and both failure policies behave as set. The scanner API was simulated for these runs.
+
+| WordPress | PHP |
+| --- | --- |
+| 5.8 | 7.4, 8.0 |
+| 6.1 | 7.4 |
+| 6.4 | 8.0, 8.1, 8.2 |
+| 6.9 | 8.1, 8.2, 8.3, 8.4 |
+
+All source files also lint cleanly on PHP 7.4 through 8.4. Combinations not listed have not been tested.
+
 ## Install
 
 1. Download `kelpgate-wordpress-plugin.zip` from the [latest release](https://github.com/amithalder21/kelpgate-wordpress-plugin/releases/latest).

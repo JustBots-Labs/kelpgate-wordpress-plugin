@@ -40,4 +40,4 @@ jobs:
           cp "$zip" dist/kelpgate-wordpress-plugin.zip
           gh release create "$GITHUB_REF_NAME" "$zip" "$zip.sha256" dist/kelpgate-wordpress-plugin.zip \
             --title "Kelpgate WordPress Plugin $GITHUB_REF_NAME" \
-            --notes "Install: download \`$(basename "$zip")\` from the assets below and upload it in WordPress admin (Plugins > Add New > Upload Plugin). Do not use the 'Source code' archives. SHA-256 is in the attached \`.sha256\` file."
+            --notes "Install: download \`$(basename "$zip")\` from the assets below and upload it in WordPress admin (Plugins > Add New > Upload Plugin). Tested on WordPress 5.8 to 6.9 with PHP 7.4 to 8.4 (see the README for the exact combinations). Do not use the 'Source code' archives. SHA-256 is in the attached \`.sha256\` file."
