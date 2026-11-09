@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Kelpgate Malware Scanner
- * Plugin URI:        https://github.com/amithalder21/kelpgate-wordpress-plugin
+ * Plugin URI:        https://github.com/JustBots-Labs/kelpgate-wordpress-plugin
  * Description:       Scan every upload for malware before it reaches your site. Infected files are blocked in real time by the Kelpgate multi-engine scanner. Connect your Kelpgate account to activate.
  * Version:           1.0.11
  * Requires at least: 5.8
@@ -30,7 +30,7 @@ if (defined('KELPGATE_VERSION')) {
 }
 
 define('KELPGATE_VERSION', '1.0.11');
-define('KELPGATE_PLUGIN_URI', 'https://github.com/amithalder21/kelpgate-wordpress-plugin');
+define('KELPGATE_PLUGIN_URI', 'https://github.com/JustBots-Labs/kelpgate-wordpress-plugin');
 define('KELPGATE_CONSOLE_URL', 'https://console.kelpgate.cloud');
 define('KELPGATE_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('KELPGATE_PLUGIN_URL', plugin_dir_url(__FILE__));
