@@ -169,7 +169,7 @@ class Kelpgate_Admin {
                     </div>
                 </div>
                 <div>
-                    <a href="https://console.strapiorbit.cloud" target="_blank" rel="noopener noreferrer" class="kelpgate-btn kelpgate-btn-secondary">
+                    <a href="https://console.kelpgate.cloud" target="_blank" rel="noopener noreferrer" class="kelpgate-btn kelpgate-btn-secondary">
                         <svg class="kelpgate-ic" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                         <span><?php esc_html_e('Kelpgate Console', 'kelpgate-wordpress-plugin'); ?></span>
                     </a>
