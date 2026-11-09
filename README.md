@@ -4,7 +4,7 @@
 
 **Stop infected uploads before they reach your site.**
 
-[![Release](https://img.shields.io/github/v/release/amithalder21/kelpgate-wordpress-plugin?color=0d9488)](https://github.com/amithalder21/kelpgate-wordpress-plugin/releases/latest)
+[![Release](https://img.shields.io/github/v/release/JustBots-Labs/kelpgate-wordpress-plugin?color=0d9488)](https://github.com/JustBots-Labs/kelpgate-wordpress-plugin/releases/latest)
 [![WordPress](https://img.shields.io/badge/WordPress-5.8%20to%206.9-21759b)](#compatibility)
 [![PHP](https://img.shields.io/badge/PHP-7.4%20to%208.4-777bb4)](#compatibility)
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)](LICENSE)
@@ -50,7 +50,7 @@ flowchart LR
 
 **Requirements:** WordPress 5.8 or later, PHP 7.4 or later, and a Kelpgate account (client ID and client secret from the Kelpgate Console).
 
-1. Download `kelpgate-wordpress-plugin.zip` from the [latest release](https://github.com/amithalder21/kelpgate-wordpress-plugin/releases/latest). Use that file, not the "Source code" archives.
+1. Download `kelpgate-wordpress-plugin.zip` from the [latest release](https://github.com/JustBots-Labs/kelpgate-wordpress-plugin/releases/latest). Use that file, not the "Source code" archives.
 2. In WordPress admin, go to **Plugins > Add New > Upload Plugin**, choose the zip, then **Install Now** and **Activate**.
 3. Open **Settings > Kelpgate Antivirus**, enter the API URL, token URL, client ID and client secret, and select **Test connection**.
 
