@@ -15,7 +15,7 @@ SLUG="kelpgate-wordpress-plugin"
 MAIN="$SLUG.php"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT_DIR="${1:-$SCRIPT_DIR/dist}"
-INCLUDE=("$MAIN" uninstall.php includes assets LICENSE README.md)
+INCLUDE=("$MAIN" uninstall.php includes assets LICENSE README.md readme.txt)
 
 fail() { echo "package.sh: $*" >&2; exit 1; }
 
