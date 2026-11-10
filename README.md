@@ -93,7 +93,7 @@ Choose fail-closed where blocking malware matters more than availability, and fa
 - **Token handling:** access tokens are cached and refreshed ahead of expiry. A rejected token is discarded and retried once.
 - **Data retained:** an incident record (time, file name, signature, SHA-256, client IP, user ID) for the last 50 blocked uploads. It is removed on uninstall.
 
-To report a vulnerability, please open a private security advisory on this repository.
+To report a vulnerability, please use this repository's private security advisory (Security, then Report a vulnerability) or email security@kelpgate.cloud.
 
 ## Compatibility
 
