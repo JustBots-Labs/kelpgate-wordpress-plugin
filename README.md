@@ -1,21 +1,12 @@
-<div align="center">
-
 # Kelpgate Malware Scanner for WordPress
 
 **Stop infected uploads before they reach your site.**
-
-[![Release](https://img.shields.io/github/v/release/JustBots-Labs/kelpgate-wordpress-plugin?color=0d9488)](https://github.com/JustBots-Labs/kelpgate-wordpress-plugin/releases/latest)
-[![WordPress](https://img.shields.io/badge/WordPress-5.8%20to%206.9-21759b)](#compatibility)
-[![PHP](https://img.shields.io/badge/PHP-7.4%20to%208.4-777bb4)](#compatibility)
-[![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)](LICENSE)
-
-</div>
 
 Kelpgate Malware Scanner checks every file uploaded to WordPress against the Kelpgate scanning service and blocks infected files before they are saved. It covers the Media Library, form plugins and custom upload handlers, and gives administrators a clear record of what was blocked.
 
 ## Contents
 
-[Why Kelpgate](#why-kelpgate) · [How it works](#how-it-works) · [Install](#install) · [Configuration](#configuration) · [Failure policy](#failure-policy) · [Security and privacy](#security-and-privacy) · [Compatibility](#compatibility) · [Verify your setup](#verify-your-setup) · [Troubleshooting](#troubleshooting) · [Release process](#release-process) · [License](#license)
+[Why Kelpgate](#why-kelpgate) · [How it works](#how-it-works) · [Install](#install) · [Configuration](#configuration) · [Failure policy](#failure-policy) · [Security and privacy](#security-and-privacy) · [Compatibility](#compatibility) · [Verify your setup](#verify-your-setup) · [Troubleshooting](#troubleshooting) · [Release process](#release-process) · [Contributing and security](#contributing-and-security) · [License](#license)
 
 ## Why Kelpgate
 
@@ -140,6 +131,10 @@ For extra detail, enable `WP_DEBUG` and `WP_DEBUG_LOG`; blocked uploads are then
 ## Release process
 
 `./package.sh` builds `kelpgate-wordpress-plugin.zip` with a single top-level `kelpgate-wordpress-plugin/` folder, verifies the layout and writes a SHA-256 file. Pushing a `vX.Y.Z` tag that matches the plugin version runs the release workflow, which lints on PHP 7.4, builds the zip and publishes the release.
+
+## Contributing and security
+
+Bug reports and pull requests are welcome; see the [contributing guide](https://github.com/JustBots-Labs/.github/blob/main/CONTRIBUTING.md). To report a vulnerability, follow the [security policy](https://github.com/JustBots-Labs/.github/blob/main/SECURITY.md) and report it privately. For help, see [getting help](https://github.com/JustBots-Labs/.github/blob/main/SUPPORT.md).
 
 ## License
 
