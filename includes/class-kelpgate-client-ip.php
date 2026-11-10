@@ -20,7 +20,7 @@ class Kelpgate_Client_IP {
     );
 
     public static function get() {
-        $peer = isset($_SERVER['REMOTE_ADDR']) ? trim(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+        $peer = isset($_SERVER['REMOTE_ADDR']) ? trim(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']))) : '';
         if (filter_var($peer, FILTER_VALIDATE_IP) === false) {
             return 'unknown';
         }
@@ -29,7 +29,7 @@ class Kelpgate_Client_IP {
             return $peer; // direct visitor: ignore any forwarded headers they sent
         }
 
-        $xff = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']) : '';
+        $xff = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR'])) : '';
         $parts = array_reverse(array_map('trim', explode(',', $xff)));
         foreach ($parts as $candidate) {
             if (filter_var($candidate, FILTER_VALIDATE_IP) !== false && !self::in_networks($candidate, $trusted)) {
@@ -37,7 +37,7 @@ class Kelpgate_Client_IP {
             }
         }
 
-        $real = isset($_SERVER['HTTP_X_REAL_IP']) ? trim(wp_unslash($_SERVER['HTTP_X_REAL_IP'])) : '';
+        $real = isset($_SERVER['HTTP_X_REAL_IP']) ? trim(sanitize_text_field(wp_unslash($_SERVER['HTTP_X_REAL_IP']))) : '';
         if (filter_var($real, FILTER_VALIDATE_IP) !== false && !self::in_networks($real, $trusted)) {
             return $real;
         }

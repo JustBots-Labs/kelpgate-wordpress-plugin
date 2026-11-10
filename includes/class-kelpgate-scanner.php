@@ -42,7 +42,7 @@ class Kelpgate_Scanner {
         if ($cache_key && isset(self::$scanned_files[$cache_key])) {
             $cached = self::$scanned_files[$cache_key];
             if (!$cached['clean']) {
-                $file['error'] = __('Security check failed: This file cannot be accepted.', 'kelpgate-wordpress-plugin');
+                $file['error'] = __('Security check failed: This file cannot be accepted.', 'kelpgate-malware-scanner');
             }
             return $file;
         }
@@ -60,7 +60,7 @@ class Kelpgate_Scanner {
             $this->log_security_incident($filename, $threat_name, $res['sha256'], $res['error']);
 
             // Set the WordPress error string to abort the upload cleanly with a minimal, non-leaking message
-            $file['error'] = __('Security check failed: This file cannot be accepted.', 'kelpgate-wordpress-plugin');
+            $file['error'] = __('Security check failed: This file cannot be accepted.', 'kelpgate-malware-scanner');
         }
 
         return $file;
@@ -70,21 +70,21 @@ class Kelpgate_Scanner {
      * Secondary defense: Inspects $_FILES on early 'init' to catch direct move_uploaded_file calls.
      */
     public function deep_inspect_raw_files() {
-        if (empty($_FILES) || !is_array($_FILES) || !$this->client->is_configured()) {
+        if (empty($_FILES) || !is_array($_FILES) || !$this->client->is_configured()) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
             return;
         }
 
         // Anonymous visitors can POST multipart data to any URL. Without a limit each file would
         // trigger a synchronous scan (worker exhaustion) and burn the shared scan quota.
         if ($this->raw_scan_limit_exceeded()) {
-            foreach ($_FILES as $data) {
+            foreach ($_FILES as $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
                 $this->discard_tmp_files($data);
             }
             if (!wp_doing_ajax() && !defined('REST_REQUEST')) {
                 wp_die(
-                    '<h1>' . esc_html__('Too Many Uploads', 'kelpgate-wordpress-plugin') . '</h1>' .
-                    '<p>' . esc_html__('Too many upload attempts. Please try again later.', 'kelpgate-wordpress-plugin') . '</p>',
-                    esc_html__('Too Many Uploads', 'kelpgate-wordpress-plugin'),
+                    '<h1>' . esc_html__('Too Many Uploads', 'kelpgate-malware-scanner') . '</h1>' .
+                    '<p>' . esc_html__('Too many upload attempts. Please try again later.', 'kelpgate-malware-scanner') . '</p>',
+                    esc_html__('Too Many Uploads', 'kelpgate-malware-scanner'),
                     array('response' => 429)
                 );
             }
@@ -92,7 +92,7 @@ class Kelpgate_Scanner {
         }
 
         // Only scan when an actual file was posted
-        foreach ($_FILES as $field => $data) {
+        foreach ($_FILES as $field => $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
             $this->inspect_file_array($data);
         }
     }
@@ -117,7 +117,7 @@ class Kelpgate_Scanner {
 
         // Count files, not requests, so one request cannot carry an unbounded number of uploads.
         $files = 0;
-        foreach ($_FILES as $data) {
+        foreach ($_FILES as $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
             if (isset($data['tmp_name'])) {
                 $files += is_array($data['tmp_name']) ? count($data['tmp_name']) : 1;
             }
@@ -138,7 +138,7 @@ class Kelpgate_Scanner {
         $paths = is_array($data['tmp_name']) ? $data['tmp_name'] : array($data['tmp_name']);
         foreach ($paths as $p) {
             if (is_string($p) && $p !== '' && file_exists($p)) {
-                @unlink($p);
+                wp_delete_file($p);
             }
         }
     }
@@ -184,14 +184,14 @@ class Kelpgate_Scanner {
             $this->log_security_incident($filename, $threat_name, $res['sha256'], $res['error']);
 
             // If a rogue script is about to move this file, destroy the infected temp file immediately
-            @unlink($tmp_name);
+            wp_delete_file($tmp_name);
 
             // Halt execution if this is a direct non-WordPress upload request
             if (!doing_action('wp_handle_upload_prefilter') && !wp_doing_ajax() && !defined('REST_REQUEST')) {
                 wp_die(
-                    '<h1>' . esc_html__('Upload Blocked', 'kelpgate-wordpress-plugin') . '</h1>' .
-                    '<p>' . esc_html__('This file cannot be accepted because it violates security policies.', 'kelpgate-wordpress-plugin') . '</p>',
-                    esc_html__('Upload Blocked', 'kelpgate-wordpress-plugin'),
+                    '<h1>' . esc_html__('Upload Blocked', 'kelpgate-malware-scanner') . '</h1>' .
+                    '<p>' . esc_html__('This file cannot be accepted because it violates security policies.', 'kelpgate-malware-scanner') . '</p>',
+                    esc_html__('Upload Blocked', 'kelpgate-malware-scanner'),
                     array('response' => 403)
                 );
             }
@@ -206,7 +206,7 @@ class Kelpgate_Scanner {
      */
     public static function format_threat_signature($raw) {
         if (empty($raw)) {
-            return __('Threat Detected', 'kelpgate-wordpress-plugin');
+            return __('Threat Detected', 'kelpgate-malware-scanner');
         }
 
         // Test string detection
@@ -233,7 +233,7 @@ class Kelpgate_Scanner {
         }
 
         if (empty($unique_parts)) {
-            return __('Threat Detected', 'kelpgate-wordpress-plugin');
+            return __('Threat Detected', 'kelpgate-malware-scanner');
         }
 
         return implode(', ', array_slice($unique_parts, 0, 2));
@@ -241,6 +241,7 @@ class Kelpgate_Scanner {
 
     private function log_security_incident($filename, $signature, $sha256, $details) {
         if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only runs when WP_DEBUG and WP_DEBUG_LOG are both on.
             error_log(sprintf(
                 '[Kelpgate] Security block: file=%s sha256=%s',
                 $filename,

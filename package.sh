@@ -3,15 +3,15 @@
 #
 #   ./package.sh [output-dir]      default output directory: ./dist
 #
-# Output: <output-dir>/kelpgate-wordpress-plugin-<version>.zip (+ .sha256)
+# Output: <output-dir>/kelpgate-malware-scanner-<version>.zip (+ .sha256)
 #
-# The zip contains exactly ONE top-level folder, `kelpgate-wordpress-plugin/`, with the main plugin file
+# The zip contains exactly ONE top-level folder, `kelpgate-malware-scanner/`, with the main plugin file
 # directly inside it. That is the layout WordPress requires; a repository download (nested or renamed
 # folder, dev files) is not installable the same way. Only an explicit allowlist of files is packaged,
 # and the result is checked before the script succeeds.
 set -euo pipefail
 
-SLUG="kelpgate-wordpress-plugin"
+SLUG="kelpgate-malware-scanner"
 MAIN="$SLUG.php"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT_DIR="${1:-$SCRIPT_DIR/dist}"

@@ -49,15 +49,15 @@ class Kelpgate_Admin {
     }
 
     public function add_action_links($links) {
-        $settings_link = '<a href="' . admin_url('options-general.php?page=kelpgate') . '">' . __('Settings', 'kelpgate-wordpress-plugin') . '</a>';
+        $settings_link = '<a href="' . admin_url('options-general.php?page=kelpgate') . '">' . __('Settings', 'kelpgate-malware-scanner') . '</a>';
         array_unshift($links, $settings_link);
         return $links;
     }
 
     public function add_menu_page() {
         add_options_page(
-            __('Kelpgate Malware Scanner', 'kelpgate-wordpress-plugin'),
-            __('Kelpgate Malware Scanner', 'kelpgate-wordpress-plugin'),
+            __('Kelpgate Malware Scanner', 'kelpgate-malware-scanner'),
+            __('Kelpgate Malware Scanner', 'kelpgate-malware-scanner'),
             'manage_options',
             'kelpgate',
             array($this, 'render_page')
@@ -79,7 +79,8 @@ class Kelpgate_Admin {
         foreach (array('api_url', 'token_url') as $key) {
             if ($clean[$key] !== '' && !Kelpgate_Client::is_secure_url($clean[$key])) {
                 add_settings_error('kelpgate_settings', 'kelpgate_insecure_' . $key,
-                    sprintf(__('%s must use https (http is only allowed for localhost). The previous value was kept.', 'kelpgate-wordpress-plugin'), $key));
+                    /* translators: %s: name of the setting that needs an https URL. */
+                    sprintf(__('%s must use https (http is only allowed for localhost). The previous value was kept.', 'kelpgate-malware-scanner'), $key));
                 $clean[$key] = isset($prev[$key]) ? $prev[$key] : '';
             }
         }
@@ -106,7 +107,7 @@ class Kelpgate_Admin {
     public function ajax_test_connection() {
         check_ajax_referer('kelpgate_admin_nonce', 'security');
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(array('message' => __('Unauthorized access.', 'kelpgate-wordpress-plugin')));
+            wp_send_json_error(array('message' => __('Unauthorized access.', 'kelpgate-malware-scanner')));
         }
 
         $this->client->refresh_settings();
@@ -152,26 +153,26 @@ class Kelpgate_Admin {
                     </div>
                     <div>
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <h1><?php esc_html_e('Kelpgate Malware Scanner', 'kelpgate-wordpress-plugin'); ?></h1>
+                            <h1><?php esc_html_e('Kelpgate Malware Scanner', 'kelpgate-malware-scanner'); ?></h1>
                             <?php if ($is_configured): ?>
                                 <span class="kelpgate-pill good">
                                     <span class="kelpgate-dot good"></span>
-                                    <span><?php esc_html_e('Connected', 'kelpgate-wordpress-plugin'); ?></span>
+                                    <span><?php esc_html_e('Connected', 'kelpgate-malware-scanner'); ?></span>
                                 </span>
                             <?php else: ?>
                                 <span class="kelpgate-pill warn">
                                     <span class="kelpgate-dot warn"></span>
-                                    <span><?php esc_html_e('Setup Required', 'kelpgate-wordpress-plugin'); ?></span>
+                                    <span><?php esc_html_e('Setup Required', 'kelpgate-malware-scanner'); ?></span>
                                 </span>
                             <?php endif; ?>
                         </div>
-                        <p><?php esc_html_e('Real-time multi-engine malware scanning for every upload.', 'kelpgate-wordpress-plugin'); ?></p>
+                        <p><?php esc_html_e('Real-time multi-engine malware scanning for every upload.', 'kelpgate-malware-scanner'); ?></p>
                     </div>
                 </div>
                 <div>
                     <a href="https://console.kelpgate.cloud" target="_blank" rel="noopener noreferrer" class="kelpgate-btn kelpgate-btn-secondary">
                         <svg class="kelpgate-ic" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        <span><?php esc_html_e('Kelpgate Console', 'kelpgate-wordpress-plugin'); ?></span>
+                        <span><?php esc_html_e('Kelpgate Console', 'kelpgate-malware-scanner'); ?></span>
                     </a>
                 </div>
             </div>
@@ -183,8 +184,8 @@ class Kelpgate_Admin {
                 </svg>
                 <div id="kelpgate-banner-text">
                     <?php if (!$is_configured): ?>
-                        <strong><?php esc_html_e('Setup Required:', 'kelpgate-wordpress-plugin'); ?></strong>
-                        <?php esc_html_e('Enter your Scanner API Endpoint and authentication credentials below to activate upload protection.', 'kelpgate-wordpress-plugin'); ?>
+                        <strong><?php esc_html_e('Setup Required:', 'kelpgate-malware-scanner'); ?></strong>
+                        <?php esc_html_e('Enter your Scanner API Endpoint and authentication credentials below to activate upload protection.', 'kelpgate-malware-scanner'); ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -198,7 +199,7 @@ class Kelpgate_Admin {
                     <div class="kelpgate-card-header">
                         <h2>
                             <svg class="kelpgate-ic" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                            <span><?php esc_html_e('API & Authentication', 'kelpgate-wordpress-plugin'); ?></span>
+                            <span><?php esc_html_e('API & Authentication', 'kelpgate-malware-scanner'); ?></span>
                         </h2>
                         <button type="button" id="kelpgate-test-btn" class="kelpgate-btn kelpgate-btn-secondary">
                             <svg class="kelpgate-ic" id="kelpgate-test-icon" viewBox="0 0 24 24">
@@ -206,49 +207,49 @@ class Kelpgate_Admin {
                                 <polyline points="1 20 1 14 7 14"/>
                                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                             </svg>
-                            <span><?php esc_html_e('Test Connection', 'kelpgate-wordpress-plugin'); ?></span>
+                            <span><?php esc_html_e('Test Connection', 'kelpgate-malware-scanner'); ?></span>
                         </button>
                     </div>
                     <div class="kelpgate-card-body">
                         <div class="kelpgate-field-group">
-                            <label for="kelpgate_api_url"><?php esc_html_e('Scanner API Endpoint', 'kelpgate-wordpress-plugin'); ?> *</label>
+                            <label for="kelpgate_api_url"><?php esc_html_e('Scanner API Endpoint', 'kelpgate-malware-scanner'); ?> *</label>
                             <input name="kelpgate_settings[api_url]" type="url" id="kelpgate_api_url" value="<?php echo esc_attr($api_url); ?>" placeholder="https://api.yourdomain.com" class="kelpgate-input mono" required>
-                            <span class="kelpgate-hint"><?php esc_html_e('Base URL where the Kelpgate threat inspection service is reachable.', 'kelpgate-wordpress-plugin'); ?></span>
+                            <span class="kelpgate-hint"><?php esc_html_e('Base URL where the Kelpgate threat inspection service is reachable.', 'kelpgate-malware-scanner'); ?></span>
                         </div>
 
                         <div class="kelpgate-field-group">
-                            <label for="kelpgate_auth_mode"><?php esc_html_e('Authentication Method', 'kelpgate-wordpress-plugin'); ?></label>
+                            <label for="kelpgate_auth_mode"><?php esc_html_e('Authentication Method', 'kelpgate-malware-scanner'); ?></label>
                             <select name="kelpgate_settings[auth_mode]" id="kelpgate_auth_mode" class="kelpgate-select">
-                                <option value="oauth2" <?php selected($auth_mode, 'oauth2'); ?>><?php esc_html_e('OAuth 2.0 Client Credentials (Recommended)', 'kelpgate-wordpress-plugin'); ?></option>
-                                <option value="token" <?php selected($auth_mode, 'token'); ?>><?php esc_html_e('Static Bearer Token', 'kelpgate-wordpress-plugin'); ?></option>
+                                <option value="oauth2" <?php selected($auth_mode, 'oauth2'); ?>><?php esc_html_e('OAuth 2.0 Client Credentials (Recommended)', 'kelpgate-malware-scanner'); ?></option>
+                                <option value="token" <?php selected($auth_mode, 'token'); ?>><?php esc_html_e('Static Bearer Token', 'kelpgate-malware-scanner'); ?></option>
                             </select>
-                            <span class="kelpgate-hint"><?php esc_html_e('OAuth 2.0 securely exchanges client credentials for short-lived access tokens with automatic renewal.', 'kelpgate-wordpress-plugin'); ?></span>
+                            <span class="kelpgate-hint"><?php esc_html_e('OAuth 2.0 securely exchanges client credentials for short-lived access tokens with automatic renewal.', 'kelpgate-malware-scanner'); ?></span>
                         </div>
 
                         <div class="kelpgate-row-oauth2">
                             <div class="kelpgate-field-group">
-                                <label for="kelpgate_token_url"><?php esc_html_e('OAuth 2.0 Token URL', 'kelpgate-wordpress-plugin'); ?> *</label>
+                                <label for="kelpgate_token_url"><?php esc_html_e('OAuth 2.0 Token URL', 'kelpgate-malware-scanner'); ?> *</label>
                                 <input name="kelpgate_settings[token_url]" type="url" id="kelpgate_token_url" value="<?php echo esc_attr($token_url); ?>" placeholder="https://auth.yourdomain.com/oauth2/token" class="kelpgate-input mono">
-                                <span class="kelpgate-hint"><?php esc_html_e('OAuth 2.0 token endpoint for client credentials authentication.', 'kelpgate-wordpress-plugin'); ?></span>
+                                <span class="kelpgate-hint"><?php esc_html_e('OAuth 2.0 token endpoint for client credentials authentication.', 'kelpgate-malware-scanner'); ?></span>
                             </div>
 
                             <div class="kelpgate-grid-2">
                                 <div class="kelpgate-field-group">
-                                    <label for="kelpgate_client_id"><?php esc_html_e('Client ID', 'kelpgate-wordpress-plugin'); ?> *</label>
+                                    <label for="kelpgate_client_id"><?php esc_html_e('Client ID', 'kelpgate-malware-scanner'); ?> *</label>
                                     <input name="kelpgate_settings[client_id]" type="text" id="kelpgate_client_id" value="<?php echo esc_attr($client_id); ?>" placeholder="e.g. 13ae94ca-d502-4f08-b7cd-a50a40faa504" class="kelpgate-input mono" autocomplete="off">
                                 </div>
                                 <div class="kelpgate-field-group">
-                                    <label for="kelpgate_client_secret"><?php esc_html_e('Client Secret', 'kelpgate-wordpress-plugin'); ?> *</label>
-                                    <input name="kelpgate_settings[client_secret]" type="password" id="kelpgate_client_secret" value="" placeholder="<?php echo $has_secret ? esc_attr__('Saved — leave blank to keep', 'kelpgate-wordpress-plugin') : ''; ?>" class="kelpgate-input mono" autocomplete="new-password">
+                                    <label for="kelpgate_client_secret"><?php esc_html_e('Client Secret', 'kelpgate-malware-scanner'); ?> *</label>
+                                    <input name="kelpgate_settings[client_secret]" type="password" id="kelpgate_client_secret" value="" placeholder="<?php echo $has_secret ? esc_attr__('Saved — leave blank to keep', 'kelpgate-malware-scanner') : ''; ?>" class="kelpgate-input mono" autocomplete="new-password">
                                 </div>
                             </div>
                         </div>
 
                         <div class="kelpgate-row-token" style="display:none;">
                             <div class="kelpgate-field-group">
-                                <label for="kelpgate_api_token"><?php esc_html_e('Static Bearer Token', 'kelpgate-wordpress-plugin'); ?> *</label>
-                                <input name="kelpgate_settings[api_token]" type="password" id="kelpgate_api_token" value="" placeholder="<?php echo $has_token ? esc_attr__('Saved — leave blank to keep', 'kelpgate-wordpress-plugin') : ''; ?>" class="kelpgate-input mono">
-                                <span class="kelpgate-hint"><?php esc_html_e('Pre-generated bearer token authorized for scan operations.', 'kelpgate-wordpress-plugin'); ?></span>
+                                <label for="kelpgate_api_token"><?php esc_html_e('Static Bearer Token', 'kelpgate-malware-scanner'); ?> *</label>
+                                <input name="kelpgate_settings[api_token]" type="password" id="kelpgate_api_token" value="" placeholder="<?php echo $has_token ? esc_attr__('Saved — leave blank to keep', 'kelpgate-malware-scanner') : ''; ?>" class="kelpgate-input mono">
+                                <span class="kelpgate-hint"><?php esc_html_e('Pre-generated bearer token authorized for scan operations.', 'kelpgate-malware-scanner'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -259,24 +260,24 @@ class Kelpgate_Admin {
                     <div class="kelpgate-card-header">
                         <h2>
                             <svg class="kelpgate-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                            <span><?php esc_html_e('Scanning Policy & Enforcement', 'kelpgate-wordpress-plugin'); ?></span>
+                            <span><?php esc_html_e('Scanning Policy & Enforcement', 'kelpgate-malware-scanner'); ?></span>
                         </h2>
                     </div>
                     <div class="kelpgate-card-body">
                         <div class="kelpgate-grid-2">
                             <div class="kelpgate-field-group">
-                                <label for="kelpgate_fail_action"><?php esc_html_e('Scanner Failure Action', 'kelpgate-wordpress-plugin'); ?></label>
+                                <label for="kelpgate_fail_action"><?php esc_html_e('Scanner Failure Action', 'kelpgate-malware-scanner'); ?></label>
                                 <select name="kelpgate_settings[fail_action]" id="kelpgate_fail_action" class="kelpgate-select">
-                                    <option value="block" <?php selected($fail_action, 'block'); ?>><?php esc_html_e('Fail-Closed (Block upload if scanner is unreachable)', 'kelpgate-wordpress-plugin'); ?></option>
-                                    <option value="allow" <?php selected($fail_action, 'allow'); ?>><?php esc_html_e('Fail-Open (Allow upload if scanner is unreachable)', 'kelpgate-wordpress-plugin'); ?></option>
+                                    <option value="block" <?php selected($fail_action, 'block'); ?>><?php esc_html_e('Fail-Closed (Block upload if scanner is unreachable)', 'kelpgate-malware-scanner'); ?></option>
+                                    <option value="allow" <?php selected($fail_action, 'allow'); ?>><?php esc_html_e('Fail-Open (Allow upload if scanner is unreachable)', 'kelpgate-malware-scanner'); ?></option>
                                 </select>
-                                <span class="kelpgate-hint"><?php esc_html_e('Determines upload behavior if the scanning service is temporarily unavailable.', 'kelpgate-wordpress-plugin'); ?></span>
+                                <span class="kelpgate-hint"><?php esc_html_e('Determines upload behavior if the scanning service is temporarily unavailable.', 'kelpgate-malware-scanner'); ?></span>
                             </div>
 
                             <div class="kelpgate-field-group">
-                                <label for="kelpgate_max_mb"><?php esc_html_e('Maximum Scan File Size (MB)', 'kelpgate-wordpress-plugin'); ?></label>
+                                <label for="kelpgate_max_mb"><?php esc_html_e('Maximum Scan File Size (MB)', 'kelpgate-malware-scanner'); ?></label>
                                 <input name="kelpgate_settings[max_mb]" type="number" id="kelpgate_max_mb" value="<?php echo esc_attr($max_mb); ?>" min="1" max="500" class="kelpgate-input">
-                                <span class="kelpgate-hint"><?php esc_html_e('Files larger than this are not sent to the scanner. They are rejected under Fail-Closed and accepted unscanned only under Fail-Open.', 'kelpgate-wordpress-plugin'); ?></span>
+                                <span class="kelpgate-hint"><?php esc_html_e('Files larger than this are not sent to the scanner. They are rejected under Fail-Closed and accepted unscanned only under Fail-Open.', 'kelpgate-malware-scanner'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -284,7 +285,7 @@ class Kelpgate_Admin {
                     <div class="kelpgate-card-footer" style="justify-content:flex-end;">
                         <button type="submit" class="kelpgate-btn kelpgate-btn-primary">
                             <svg class="kelpgate-ic" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                            <span><?php esc_html_e('Save Changes', 'kelpgate-wordpress-plugin'); ?></span>
+                            <span><?php esc_html_e('Save Changes', 'kelpgate-malware-scanner'); ?></span>
                         </button>
                     </div>
                 </div>
@@ -295,29 +296,32 @@ class Kelpgate_Admin {
                 <div class="kelpgate-card-header">
                     <h2>
                         <svg class="kelpgate-ic" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span><?php esc_html_e('Blocked Threats Log', 'kelpgate-wordpress-plugin'); ?></span>
+                        <span><?php esc_html_e('Blocked Threats Log', 'kelpgate-malware-scanner'); ?></span>
                     </h2>
                     <?php if (!empty($incidents)): ?>
                         <span class="kelpgate-pill crit">
-                            <?php echo esc_html(sprintf(_n('%d threat blocked', '%d threats blocked', count($incidents), 'kelpgate-wordpress-plugin'), count($incidents))); ?>
+                            <?php
+                            /* translators: %d: number of blocked threats. */
+                            echo esc_html(sprintf(_n('%d threat blocked', '%d threats blocked', count($incidents), 'kelpgate-malware-scanner'), count($incidents)));
+                            ?>
                         </span>
                     <?php endif; ?>
                 </div>
                 <?php if (empty($incidents)): ?>
                     <div class="kelpgate-card-body" style="text-align:center; padding: 40px 20px; color: var(--kg-text-3);">
                         <svg class="kelpgate-ic" viewBox="0 0 24 24" style="width:24px; height:24px; stroke: var(--kg-good); margin-bottom: 8px;"><polyline points="20 6 9 17 4 12"/></svg>
-                        <p style="margin:0; font-weight:500; color: var(--kg-text);"><?php esc_html_e('No Threats Detected', 'kelpgate-wordpress-plugin'); ?></p>
-                        <p style="margin-top:4px; font-size:12.5px;"><?php esc_html_e('All uploaded files have passed security inspection.', 'kelpgate-wordpress-plugin'); ?></p>
+                        <p style="margin:0; font-weight:500; color: var(--kg-text);"><?php esc_html_e('No Threats Detected', 'kelpgate-malware-scanner'); ?></p>
+                        <p style="margin-top:4px; font-size:12.5px;"><?php esc_html_e('All uploaded files have passed security inspection.', 'kelpgate-malware-scanner'); ?></p>
                     </div>
                 <?php else: ?>
                     <table class="kelpgate-table">
                         <thead>
                             <tr>
-                                <th style="width:160px;"><?php esc_html_e('Timestamp (UTC)', 'kelpgate-wordpress-plugin'); ?></th>
-                                <th><?php esc_html_e('File Name', 'kelpgate-wordpress-plugin'); ?></th>
-                                <th><?php esc_html_e('Threat Detection', 'kelpgate-wordpress-plugin'); ?></th>
-                                <th><?php esc_html_e('SHA-256 Digest', 'kelpgate-wordpress-plugin'); ?></th>
-                                <th style="width:120px;"><?php esc_html_e('Client IP', 'kelpgate-wordpress-plugin'); ?></th>
+                                <th style="width:160px;"><?php esc_html_e('Timestamp (UTC)', 'kelpgate-malware-scanner'); ?></th>
+                                <th><?php esc_html_e('File Name', 'kelpgate-malware-scanner'); ?></th>
+                                <th><?php esc_html_e('Threat Detection', 'kelpgate-malware-scanner'); ?></th>
+                                <th><?php esc_html_e('SHA-256 Digest', 'kelpgate-malware-scanner'); ?></th>
+                                <th style="width:120px;"><?php esc_html_e('Client IP', 'kelpgate-malware-scanner'); ?></th>
                             </tr>
                         </thead>
                         <tbody id="kelpgate-incidents-body">
@@ -339,17 +343,20 @@ class Kelpgate_Admin {
                         <div class="kelpgate-pagination-bar" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--kg-surface-2);border-top:1px solid var(--kg-border);font-size:12.5px;gap:12px;">
                             <div class="kelpgate-pagination-info" style="font-weight:500;color:var(--kg-text-2);font-size:12px;white-space:nowrap;">
                                 <span id="kelpgate-page-info">
-                                    <?php printf(esc_html__('Showing 1–%1$d of %2$d threats', 'kelpgate-wordpress-plugin'), min(10, count($incidents)), count($incidents)); ?>
+                                    <?php
+                                    /* translators: 1: number of threats shown on this page, 2: total number of threats. */
+                                    printf(esc_html__('Showing 1–%1$d of %2$d threats', 'kelpgate-malware-scanner'), absint(min(10, count($incidents))), absint(count($incidents)));
+                                    ?>
                                 </span>
                             </div>
                             <div class="kelpgate-pagination-controls" style="display:inline-flex;align-items:center;gap:6px;">
                                 <button type="button" class="kelpgate-page-btn" id="kelpgate-prev-btn" disabled style="display:inline-flex;align-items:center;gap:5px;height:30px;padding:5px 12px;margin:0;">
                                     <svg class="kelpgate-ic" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                                    <span><?php esc_html_e('Previous', 'kelpgate-wordpress-plugin'); ?></span>
+                                    <span><?php esc_html_e('Previous', 'kelpgate-malware-scanner'); ?></span>
                                 </button>
                                 <span id="kelpgate-page-numbers" class="kelpgate-page-numbers" style="display:inline-flex;align-items:center;gap:4px;"></span>
                                 <button type="button" class="kelpgate-page-btn" id="kelpgate-next-btn" style="display:inline-flex;align-items:center;gap:5px;height:30px;padding:5px 12px;margin:0;">
-                                    <span><?php esc_html_e('Next', 'kelpgate-wordpress-plugin'); ?></span>
+                                    <span><?php esc_html_e('Next', 'kelpgate-malware-scanner'); ?></span>
                                     <svg class="kelpgate-ic" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                                 </button>
                             </div>
@@ -394,7 +401,7 @@ class Kelpgate_Admin {
 
                     var data = new FormData();
                     data.append('action', 'kelpgate_test_connection');
-                    data.append('security', '<?php echo wp_create_nonce('kelpgate_admin_nonce'); ?>');
+                    data.append('security', '<?php echo esc_js(wp_create_nonce('kelpgate_admin_nonce')); ?>');
 
                     fetch(ajaxurl, {
                         method: 'POST',
@@ -408,11 +415,11 @@ class Kelpgate_Admin {
 
                         if (json.success && json.data && json.data.success) {
                             banner.className = 'kelpgate-banner healthy';
-                            setBanner('<?php echo esc_js(__('Connected: ', 'kelpgate-wordpress-plugin')); ?>', json.data.message);
+                            setBanner('<?php echo esc_js(__('Connected: ', 'kelpgate-malware-scanner')); ?>', json.data.message);
                         } else {
-                            var msg = (json.data && json.data.message) ? json.data.message : '<?php echo esc_js(__('Connection test failed.', 'kelpgate-wordpress-plugin')); ?>';
+                            var msg = (json.data && json.data.message) ? json.data.message : '<?php echo esc_js(__('Connection test failed.', 'kelpgate-malware-scanner')); ?>';
                             banner.className = 'kelpgate-banner error';
-                            setBanner('<?php echo esc_js(__('Error: ', 'kelpgate-wordpress-plugin')); ?>', msg);
+                            setBanner('<?php echo esc_js(__('Error: ', 'kelpgate-malware-scanner')); ?>', msg);
                         }
                     })
                     .catch(function(err) {
@@ -420,7 +427,7 @@ class Kelpgate_Admin {
                         icon.classList.remove('kelpgate-spinning');
                         banner.style.display = 'flex';
                         banner.className = 'kelpgate-banner error';
-                        setBanner('<?php echo esc_js(__('Network Error: ', 'kelpgate-wordpress-plugin')); ?>', err.message);
+                        setBanner('<?php echo esc_js(__('Network Error: ', 'kelpgate-malware-scanner')); ?>', err.message);
                     });
                 });
             }

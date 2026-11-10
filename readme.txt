@@ -1,9 +1,10 @@
 === Kelpgate Malware Scanner ===
+Contributors: kelpgate
 Tags: malware, security, scanner, uploads, antivirus
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.11
+Stable tag: 1.0.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +69,10 @@ This plugin sends files to the Kelpgate scanning service, a third-party hosted s
 * **Service:** https://kelpgate.cloud (API and console under kelpgate.cloud).
 
 == Changelog ==
+
+= 1.0.12 =
+* Prepare for the WordPress.org plugin directory: new plugin slug and text domain (kelpgate-malware-scanner), plugin details now come from this readme.
+* Add directory icon and banner.
 
 = 1.0.11 =
 * Point the plugin at console.kelpgate.cloud.

@@ -43,7 +43,7 @@ flowchart LR
 
 **Requirements:** WordPress 5.8 or later, PHP 7.4 or later, and a Kelpgate account (client ID and client secret from the Kelpgate Console).
 
-1. Download `kelpgate-wordpress-plugin.zip` from the [latest release](https://github.com/JustBots-Labs/kelpgate-wordpress-plugin/releases/latest). Use that file, not the "Source code" archives.
+1. Download `kelpgate-malware-scanner.zip` from the [latest release](https://github.com/JustBots-Labs/kelpgate-wordpress-plugin/releases/latest). Use that file, not the "Source code" archives.
 2. In WordPress admin, go to **Plugins > Add New > Upload Plugin**, choose the zip, then **Install Now** and **Activate**.
 3. Open **Settings > Kelpgate Malware Scanner**, enter the API URL, token URL, client ID and client secret, and select **Test connection**.
 
@@ -105,6 +105,9 @@ Every combination below was installed on a real WordPress and checked: a clean u
 | 6.1 | 7.4 |
 | 6.4 | 8.0, 8.1, 8.2 |
 | 6.9 | 8.1, 8.2, 8.3, 8.4 |
+| 7.1 | 8.3 |
+
+WordPress 7.1 (7.1.4) was checked for accepting a clean upload and rejecting an infected one, through both multipart and raw-body REST uploads, and the packaged plugin passes the official Plugin Check with no findings. The failure policies were not re-run on 7.1.
 
 All source files also lint cleanly on PHP 7.4 through 8.4. Combinations not listed have not been tested.
 
@@ -132,7 +135,7 @@ For extra detail, enable `WP_DEBUG` and `WP_DEBUG_LOG`; blocked uploads are then
 
 ## Release process
 
-`./package.sh` builds `kelpgate-wordpress-plugin.zip` with a single top-level `kelpgate-wordpress-plugin/` folder, verifies the layout and writes a SHA-256 file. Pushing a `vX.Y.Z` tag that matches the plugin version runs the release workflow, which lints on PHP 7.4, builds the zip and publishes the release.
+`./package.sh` builds `kelpgate-malware-scanner.zip` with a single top-level `kelpgate-malware-scanner/` folder, verifies the layout and writes a SHA-256 file. Pushing a `vX.Y.Z` tag that matches the plugin version runs the release workflow, which lints on PHP 7.4, builds the zip and publishes the release.
 
 ## Contributing and security
 

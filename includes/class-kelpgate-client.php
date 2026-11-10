@@ -127,7 +127,7 @@ class Kelpgate_Client {
         if ($this->get_auth_mode() === 'token') {
             $token = $this->get_static_token();
             if (empty($token)) {
-                return new WP_Error('missing_token', __('No static API Bearer token configured.', 'kelpgate-wordpress-plugin'));
+                return new WP_Error('missing_token', __('No static API Bearer token configured.', 'kelpgate-malware-scanner'));
             }
             return $token;
         }
@@ -138,10 +138,10 @@ class Kelpgate_Client {
         $client_secret = $this->get_client_secret();
 
         if (empty($token_url)) {
-            return new WP_Error('missing_token_url', __('OAuth2 Token URL is missing.', 'kelpgate-wordpress-plugin'));
+            return new WP_Error('missing_token_url', __('OAuth2 Token URL is missing.', 'kelpgate-malware-scanner'));
         }
         if (empty($client_id) || empty($client_secret)) {
-            return new WP_Error('missing_credentials', __('OAuth2 Client ID or Client Secret is missing.', 'kelpgate-wordpress-plugin'));
+            return new WP_Error('missing_credentials', __('OAuth2 Client ID or Client Secret is missing.', 'kelpgate-malware-scanner'));
         }
 
         $cache_key = 'kelpgate_oauth_token_' . md5($client_id);
@@ -216,7 +216,8 @@ class Kelpgate_Client {
 
         if ($code !== 200 || !is_array($data) || empty($data['access_token'])) {
             $err_detail = isset($data['error_description']) ? $data['error_description'] : (isset($data['error']) ? $data['error'] : 'HTTP ' . $code);
-            return new WP_Error('oauth_failed', sprintf(__('OAuth2 authentication failed: %s', 'kelpgate-wordpress-plugin'), $err_detail));
+            /* translators: %s: reason the token request failed. */
+            return new WP_Error('oauth_failed', sprintf(__('OAuth2 authentication failed: %s', 'kelpgate-malware-scanner'), $err_detail));
         }
 
         $expires_in = isset($data['expires_in']) ? intval($data['expires_in']) : 900;
@@ -236,14 +237,14 @@ class Kelpgate_Client {
         if (!$this->is_configured()) {
             return array(
                 'success' => false,
-                'message' => __('Kelpgate is not configured. Please fill in the API Endpoint and OAuth2 credentials first.', 'kelpgate-wordpress-plugin'),
+                'message' => __('Kelpgate is not configured. Please fill in the API Endpoint and OAuth2 credentials first.', 'kelpgate-malware-scanner'),
             );
         }
 
         if (!$this->endpoints_secure()) {
             return array(
                 'success' => false,
-                'message' => __('The API and token URLs must use https (http is only allowed for localhost).', 'kelpgate-wordpress-plugin'),
+                'message' => __('The API and token URLs must use https (http is only allowed for localhost).', 'kelpgate-malware-scanner'),
             );
         }
 
@@ -267,7 +268,7 @@ class Kelpgate_Client {
         if (is_wp_error($response)) {
             return array(
                 'success' => false,
-                'message' => __('Scanner API unreachable: ', 'kelpgate-wordpress-plugin') . $response->get_error_message(),
+                'message' => __('Scanner API unreachable: ', 'kelpgate-malware-scanner') . $response->get_error_message(),
             );
         }
 
@@ -275,13 +276,14 @@ class Kelpgate_Client {
         if ($code === 200) {
             return array(
                 'success' => true,
-                'message' => __('Authentication verified and threat scanning service is active.', 'kelpgate-wordpress-plugin'),
+                'message' => __('Authentication verified and threat scanning service is active.', 'kelpgate-malware-scanner'),
             );
         }
 
         return array(
             'success' => false,
-            'message' => sprintf(__('Scanner API responded with HTTP code %d.', 'kelpgate-wordpress-plugin'), $code),
+            /* translators: %d: HTTP status code returned by the scanner API. */
+            'message' => sprintf(__('Scanner API responded with HTTP code %d.', 'kelpgate-malware-scanner'), $code),
         );
     }
 
@@ -308,7 +310,7 @@ class Kelpgate_Client {
                 'clean'     => ($this->get_fail_action() === 'allow'),
                 'signature' => 'INSECURE_ENDPOINT',
                 'sha256'    => '',
-                'error'     => __('The API and token URLs must use https.', 'kelpgate-wordpress-plugin'),
+                'error'     => __('The API and token URLs must use https.', 'kelpgate-malware-scanner'),
             );
         }
 
@@ -317,7 +319,7 @@ class Kelpgate_Client {
                 'clean'     => false,
                 'signature' => 'LOCAL_ERROR:FILE_NOT_READABLE',
                 'sha256'    => '',
-                'error'     => __('Local upload file cannot be read.', 'kelpgate-wordpress-plugin'),
+                'error'     => __('Local upload file cannot be read.', 'kelpgate-malware-scanner'),
             );
         }
 
@@ -330,7 +332,7 @@ class Kelpgate_Client {
                 'clean'     => ($this->get_fail_action() === 'allow'),
                 'signature' => 'FILE_TOO_LARGE',
                 'sha256'    => '',
-                'error'     => __('File exceeds the maximum scan size.', 'kelpgate-wordpress-plugin'),
+                'error'     => __('File exceeds the maximum scan size.', 'kelpgate-malware-scanner'),
             );
         }
 
@@ -339,7 +341,7 @@ class Kelpgate_Client {
                 'clean'     => ($this->get_fail_action() === 'allow'),
                 'signature' => 'MEMORY_LIMIT',
                 'sha256'    => '',
-                'error'     => __('Not enough PHP memory to buffer this file for scanning.', 'kelpgate-wordpress-plugin'),
+                'error'     => __('Not enough PHP memory to buffer this file for scanning.', 'kelpgate-malware-scanner'),
             );
         }
 
@@ -366,7 +368,7 @@ class Kelpgate_Client {
                 'clean'     => false,
                 'signature' => 'LOCAL_ERROR:READ_FAILED',
                 'sha256'    => '',
-                'error'     => __('Failed to read file contents for transmission.', 'kelpgate-wordpress-plugin'),
+                'error'     => __('Failed to read file contents for transmission.', 'kelpgate-malware-scanner'),
             );
         }
 

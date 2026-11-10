@@ -19,7 +19,7 @@ jobs:
       - name: The tag must match the plugin version
         run: |
           set -euo pipefail
-          header="$(sed -n 's/^ \* Version: *//p' kelpgate-wordpress-plugin.php | head -1 | tr -d '[:space:]')"
+          header="$(sed -n 's/^ \* Version: *//p' kelpgate-malware-scanner.php | head -1 | tr -d '[:space:]')"
           if [ "v$header" != "$GITHUB_REF_NAME" ]; then
             echo "::error::tag $GITHUB_REF_NAME does not match the plugin Version header (v$header)"; exit 1
           fi
@@ -35,9 +35,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          zip="$(ls dist/kelpgate-wordpress-plugin-*.zip)"
-          # a stable, unversioned asset name so .../releases/latest/download/kelpgate-wordpress-plugin.zip works
-          cp "$zip" dist/kelpgate-wordpress-plugin.zip
-          gh release create "$GITHUB_REF_NAME" "$zip" "$zip.sha256" dist/kelpgate-wordpress-plugin.zip \
+          zip="$(ls dist/kelpgate-malware-scanner-*.zip)"
+          # a stable, unversioned asset name so .../releases/latest/download/kelpgate-malware-scanner.zip works
+          cp "$zip" dist/kelpgate-malware-scanner.zip
+          gh release create "$GITHUB_REF_NAME" "$zip" "$zip.sha256" dist/kelpgate-malware-scanner.zip \
             --title "Kelpgate WordPress Plugin $GITHUB_REF_NAME" \
             --notes "Install: download \`$(basename "$zip")\` from the assets below and upload it in WordPress admin (Plugins > Add New > Upload Plugin). Tested on WordPress 5.8 to 6.9 with PHP 7.4 to 8.4 (see the README for the exact combinations). Do not use the 'Source code' archives. SHA-256 is in the attached \`.sha256\` file."
