@@ -56,8 +56,8 @@ class Kelpgate_Admin {
 
     public function add_menu_page() {
         add_options_page(
-            __('Kelpgate Antivirus', 'kelpgate-wordpress-plugin'),
-            __('Kelpgate Antivirus', 'kelpgate-wordpress-plugin'),
+            __('Kelpgate Malware Scanner', 'kelpgate-wordpress-plugin'),
+            __('Kelpgate Malware Scanner', 'kelpgate-wordpress-plugin'),
             'manage_options',
             'kelpgate',
             array($this, 'render_page')
@@ -152,7 +152,7 @@ class Kelpgate_Admin {
                     </div>
                     <div>
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <h1><?php esc_html_e('Kelpgate Antivirus', 'kelpgate-wordpress-plugin'); ?></h1>
+                            <h1><?php esc_html_e('Kelpgate Malware Scanner', 'kelpgate-wordpress-plugin'); ?></h1>
                             <?php if ($is_configured): ?>
                                 <span class="kelpgate-pill good">
                                     <span class="kelpgate-dot good"></span>
@@ -165,7 +165,7 @@ class Kelpgate_Admin {
                                 </span>
                             <?php endif; ?>
                         </div>
-                        <p><?php esc_html_e('Real-time multi-engine threat detection and upload security for WordPress.', 'kelpgate-wordpress-plugin'); ?></p>
+                        <p><?php esc_html_e('Real-time multi-engine malware scanning for every upload.', 'kelpgate-wordpress-plugin'); ?></p>
                     </div>
                 </div>
                 <div>

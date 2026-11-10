@@ -4,6 +4,8 @@
 
 Kelpgate Malware Scanner checks every file uploaded to WordPress against the Kelpgate scanning service and blocks infected files before they are saved. It covers the Media Library, form plugins and custom upload handlers, and gives administrators a clear record of what was blocked.
 
+> This plugin is open source under GPL-2.0-or-later. It is a client for the Kelpgate scanning service, a hosted commercial product that is not part of this repository. You need a Kelpgate account to use it.
+
 ## Contents
 
 [Why Kelpgate](#why-kelpgate) · [How it works](#how-it-works) · [Install](#install) · [Configuration](#configuration) · [Failure policy](#failure-policy) · [Security and privacy](#security-and-privacy) · [Compatibility](#compatibility) · [Verify your setup](#verify-your-setup) · [Troubleshooting](#troubleshooting) · [Release process](#release-process) · [Contributing and security](#contributing-and-security) · [License](#license)
@@ -43,7 +45,7 @@ flowchart LR
 
 1. Download `kelpgate-wordpress-plugin.zip` from the [latest release](https://github.com/JustBots-Labs/kelpgate-wordpress-plugin/releases/latest). Use that file, not the "Source code" archives.
 2. In WordPress admin, go to **Plugins > Add New > Upload Plugin**, choose the zip, then **Install Now** and **Activate**.
-3. Open **Settings > Kelpgate Antivirus**, enter the API URL, token URL, client ID and client secret, and select **Test connection**.
+3. Open **Settings > Kelpgate Malware Scanner**, enter the API URL, token URL, client ID and client secret, and select **Test connection**.
 
 Each release includes a `.sha256` file so you can verify the download.
 

@@ -71,7 +71,7 @@ class Kelpgate_Plugin_Meta {
             'installation' => '<ol>'
                 . '<li>Upload the zip under <strong>Plugins &rarr; Add New &rarr; Upload Plugin</strong> and activate it.</li>'
                 . '<li>Get your API credentials in the Kelpgate console (link on this page).</li>'
-                . '<li>Open <strong>Settings &rarr; Kelpgate Antivirus</strong>, enter the API address and credentials, and press <strong>Test Connection</strong>.</li>'
+                . '<li>Open <strong>Settings &rarr; Kelpgate Malware Scanner</strong>, enter the API address and credentials, and press <strong>Test Connection</strong>.</li>'
                 . '</ol>',
             'changelog'    => '<h4>' . esc_html(KELPGATE_VERSION) . '</h4><ul>'
                 . '<li>Plugin listing: working links, description and this details panel.</li>'
