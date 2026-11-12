@@ -16,7 +16,7 @@ Kelpgate Malware Scanner checks every file uploaded to WordPress against the Kel
 | --- | --- |
 | **Blocks at the door** | Uploads are scanned during the upload itself. An infected file is rejected and never lands in `wp-content/uploads`. |
 | **Broad coverage** | Hooks WordPress's own upload pipeline and also inspects raw `$_FILES` uploads sent to other endpoints, such as form plugins and custom handlers. |
-| **Predictable failure behaviour** | You choose what happens when the scanner is unreachable or a file is too large: reject (fail-closed) or accept (fail-open). |
+| **Predictable failure behavior** | You choose what happens when the scanner is unreachable or a file is too large: reject (fail-closed) or accept (fail-open). |
 | **Credentials stay out of the database** | Set the API URL and client credentials as constants in `wp-config.php`. Saved secrets are never echoed back into the settings page. |
 | **Accurate client IPs** | Incident records store the visitor's address, honouring `X-Forwarded-For` only from proxies you trust. |
 | **Clean removal** | Deleting the plugin removes its settings, incident log and cached tokens. |
@@ -43,7 +43,7 @@ flowchart LR
 
 **Requirements:** WordPress 5.8 or later, PHP 7.4 or later, and a Kelpgate account (client ID and client secret from the Kelpgate Console).
 
-1. Download `kelpgate-malware-scanner.zip` from the [latest release](https://github.com/KelpGate/kelpgate-wordpress-plugin/releases/latest). Use that file, not the "Source code" archives.
+1. Download `kelpgate-malware-scanner.zip` from the [latest release](https://github.com/KelpGate/kelpgate-wordpress/releases/latest). Use that file, not the "Source code" archives.
 2. In WordPress admin, go to **Plugins > Add New > Upload Plugin**, choose the zip, then **Install Now** and **Activate**.
 3. Open **Settings > Kelpgate Malware Scanner**, enter the API URL, token URL, client ID and client secret, and select **Test connection**.
 
@@ -139,7 +139,7 @@ For extra detail, enable `WP_DEBUG` and `WP_DEBUG_LOG`; blocked uploads are then
 
 ## Support and versioning
 
-This project follows [Semantic Versioning](https://semver.org): breaking changes only in major versions, new features in minor versions, fixes in patch versions. Releases are tagged on GitHub, and user-visible changes are listed in the [changelog](readme.txt).
+This project follows [Semantic Versioning](https://semver.org): breaking changes only in major versions, new features in minor versions, fixes in patch versions. Releases are tagged on GitHub, and user-visible changes are listed in the [changelog](CHANGELOG.md).
 
 Fixes, including security fixes, go into the latest release only, so upgrade to receive them. The tested runtime versions are listed under Compatibility. The plugin talks to version 1 of the Kelpgate API (`/api/v1`).
 

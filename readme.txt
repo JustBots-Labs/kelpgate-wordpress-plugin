@@ -18,7 +18,7 @@ Kelpgate Malware Scanner checks every file uploaded to WordPress against the Kel
 
 * **Blocks at the door.** Files are scanned during the upload. An infected file is rejected and never lands in `wp-content/uploads`.
 * **Broad coverage.** Hooks WordPress's own upload pipeline and also inspects raw file uploads sent to other endpoints, such as form plugins and custom handlers.
-* **You choose the failure behaviour.** If the scanner cannot be reached or a file is too large, either reject the upload (safest) or accept it.
+* **You choose the failure behavior.** If the scanner cannot be reached or a file is too large, either reject the upload (safest) or accept it.
 * **Credentials stay out of the database.** Define the API address and credentials as constants in `wp-config.php`. Saved secrets are never shown again on the settings page.
 * **Accurate client addresses.** Incident records store the visitor's IP address, trusting `X-Forwarded-For` only from proxies you list.
 * **Clean removal.** Deleting the plugin removes its settings, incident log and cached tokens.
@@ -28,7 +28,7 @@ Kelpgate Malware Scanner checks every file uploaded to WordPress against the Kel
 == Installation ==
 
 1. Upload the plugin zip under **Plugins > Add New > Upload Plugin**, then activate it.
-2. Get your API credentials in the Kelpgate console at https://console.kelpgate.cloud.
+2. Get your API credentials in the Kelpgate Console at https://console.kelpgate.cloud.
 3. Open **Settings > Kelpgate Malware Scanner**, enter the API URL, token URL, client ID and client secret, and select **Test connection**.
 
 To keep credentials out of the database, define them in `wp-config.php`:
