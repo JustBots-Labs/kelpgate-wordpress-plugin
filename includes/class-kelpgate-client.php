@@ -57,15 +57,34 @@ class Kelpgate_Client {
     }
 
     public function get_static_token() {
+        if (defined('KELPGATE_TOKEN') && !empty(KELPGATE_TOKEN)) {
+            return trim(KELPGATE_TOKEN);
+        }
         return !empty($this->settings['api_token']) ? trim($this->settings['api_token']) : '';
     }
 
     public function get_fail_action() {
+        if (defined('KELPGATE_FAIL_ACTION') && in_array(KELPGATE_FAIL_ACTION, array('block', 'allow'), true)) {
+            return KELPGATE_FAIL_ACTION;
+        }
         return !empty($this->settings['fail_action']) ? $this->settings['fail_action'] : 'block';
     }
 
     public function get_max_mb() {
+        if (defined('KELPGATE_MAX_MB') && intval(KELPGATE_MAX_MB) > 0) {
+            return max(1, intval(KELPGATE_MAX_MB));
+        }
         return !empty($this->settings['max_mb']) ? max(1, intval($this->settings['max_mb'])) : 50;
+    }
+
+    /** Seconds to wait for a file scan. Constant KELPGATE_TIMEOUT_SECONDS wins over the saved setting. */
+    public function get_timeout() {
+        if (defined('KELPGATE_TIMEOUT_SECONDS') && intval(KELPGATE_TIMEOUT_SECONDS) > 0) {
+            $seconds = intval(KELPGATE_TIMEOUT_SECONDS);
+        } else {
+            $seconds = !empty($this->settings['timeout_seconds']) ? intval($this->settings['timeout_seconds']) : 45;
+        }
+        return max(5, min(300, $seconds));
     }
 
     /**
@@ -385,7 +404,7 @@ class Kelpgate_Client {
         $response = wp_remote_post($url, array(
             'headers'   => $headers,
             'body'      => $payload,
-            'timeout'   => 45,
+            'timeout'   => $this->get_timeout(),
             'sslverify' => true,
         ));
 
@@ -412,7 +431,7 @@ class Kelpgate_Client {
                 $response = wp_remote_post($url, array(
                     'headers'   => $headers,
                     'body'      => $payload,
-                    'timeout'   => 45,
+                    'timeout'   => $this->get_timeout(),
                     'sslverify' => true,
                 ));
                 if (!is_wp_error($response)) {

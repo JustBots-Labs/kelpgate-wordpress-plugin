@@ -96,6 +96,7 @@ class Kelpgate_Admin {
             : (isset($existing['api_token']) ? $existing['api_token'] : '');
         $clean['fail_action']   = (!empty($input['fail_action']) && $input['fail_action'] === 'allow') ? 'allow' : 'block';
         $clean['max_mb']        = !empty($input['max_mb']) ? max(1, min(500, intval($input['max_mb']))) : 50;
+        $clean['timeout_seconds'] = !empty($input['timeout_seconds']) ? max(5, min(300, intval($input['timeout_seconds']))) : 45;
 
         if (!empty($clean['client_id'])) {
             delete_transient('kelpgate_oauth_token_' . md5($clean['client_id']));
@@ -141,6 +142,7 @@ class Kelpgate_Admin {
         $has_token     = !empty($settings['api_token']);
         $fail_action   = isset($settings['fail_action']) ? $settings['fail_action'] : 'block';
         $max_mb        = isset($settings['max_mb']) ? $settings['max_mb'] : 50;
+        $timeout_seconds = isset($settings['timeout_seconds']) ? $settings['timeout_seconds'] : 45;
         ?>
         <div class="wrap kelpgate-wrap">
             <!-- Header Section -->
@@ -278,6 +280,12 @@ class Kelpgate_Admin {
                                 <label for="kelpgate_max_mb"><?php esc_html_e('Maximum Scan File Size (MB)', 'kelpgate-malware-scanner'); ?></label>
                                 <input name="kelpgate_settings[max_mb]" type="number" id="kelpgate_max_mb" value="<?php echo esc_attr($max_mb); ?>" min="1" max="500" class="kelpgate-input">
                                 <span class="kelpgate-hint"><?php esc_html_e('Files larger than this are not sent to the scanner. They are rejected under Fail-Closed and accepted unscanned only under Fail-Open.', 'kelpgate-malware-scanner'); ?></span>
+                            </div>
+
+                            <div class="kelpgate-field-group">
+                                <label for="kelpgate_timeout_seconds"><?php esc_html_e('Scan Timeout (seconds)', 'kelpgate-malware-scanner'); ?></label>
+                                <input name="kelpgate_settings[timeout_seconds]" type="number" id="kelpgate_timeout_seconds" value="<?php echo esc_attr($timeout_seconds); ?>" min="5" max="300" class="kelpgate-input">
+                                <span class="kelpgate-hint"><?php esc_html_e('How long to wait for the scanner before treating the file as unscannable (see Scanner Failure Action).', 'kelpgate-malware-scanner'); ?></span>
                             </div>
                         </div>
                     </div>

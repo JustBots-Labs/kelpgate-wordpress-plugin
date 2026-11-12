@@ -58,6 +58,8 @@ define('KELPGATE_API_URL',       'https://api.example.com');
 define('KELPGATE_TOKEN_URL',     'https://auth.example.com/oauth2/token');
 define('KELPGATE_CLIENT_ID',     'your-client-id');
 define('KELPGATE_CLIENT_SECRET', 'your-client-secret');
+// Optional: KELPGATE_TOKEN (static token), KELPGATE_AUTH_MODE ('oauth2' or 'token'),
+// KELPGATE_FAIL_ACTION ('block' or 'allow'), KELPGATE_MAX_MB, KELPGATE_TIMEOUT_SECONDS
 
 // Behind a load balancer or CDN: comma-separated IPs/CIDRs whose X-Forwarded-For header is trusted.
 define('KELPGATE_TRUSTED_PROXIES', '10.0.0.0/8');
@@ -67,8 +69,9 @@ define('KELPGATE_TRUSTED_PROXIES', '10.0.0.0/8');
 | --- | --- | --- | --- |
 | API URL, token URL | Admin page or constant | none | Must be HTTPS (plain HTTP is accepted only for `localhost`). |
 | Client ID, client secret | Admin page or constant | none | Leave the secret field blank to keep the saved one. |
-| Failure policy | Admin page | block | See below. |
-| Maximum file size | Admin page | 50 MB | 1 to 500 MB. |
+| Failure policy | Admin page or `KELPGATE_FAIL_ACTION` | block | See below. |
+| Maximum file size | Admin page or `KELPGATE_MAX_MB` | 50 MB | 1 to 500 MB. |
+| Scan timeout | Admin page or `KELPGATE_TIMEOUT_SECONDS` | 45 seconds | 5 to 300 seconds. |
 | Trusted proxies | `KELPGATE_TRUSTED_PROXIES` or the `kelpgate_trusted_proxies` filter | loopback and private ranges | Controls which proxies may supply `X-Forwarded-For`. |
 
 ## Failure policy
