@@ -58,7 +58,7 @@ Upload a file containing the standard EICAR test string through the Media Librar
 
 = How do I report a security problem? =
 
-Privately: email security@kelpgate.cloud or follow the security policy at https://github.com/JustBots-Labs/.github/blob/main/SECURITY.md. For other help, email support@kelpgate.cloud.
+Privately: email security@kelpgate.cloud or follow the security policy at https://github.com/KelpGate/.github/blob/main/SECURITY.md. For other help, email support@kelpgate.cloud.
 
 == External services ==
 
