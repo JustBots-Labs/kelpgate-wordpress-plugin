@@ -8,7 +8,7 @@ Kelpgate Malware Scanner checks every file uploaded to WordPress against the Kel
 
 ## Contents
 
-[Why Kelpgate](#why-kelpgate) · [How it works](#how-it-works) · [Install](#install) · [Configuration](#configuration) · [Failure policy](#failure-policy) · [Security and privacy](#security-and-privacy) · [Compatibility](#compatibility) · [Verify your setup](#verify-your-setup) · [Troubleshooting](#troubleshooting) · [Release process](#release-process) · [Contributing and security](#contributing-and-security) · [License](#license)
+[Why Kelpgate](#why-kelpgate) · [How it works](#how-it-works) · [Install](#install) · [Configuration](#configuration) · [Failure policy](#failure-policy) · [Security and privacy](#security-and-privacy) · [Compatibility](#compatibility) · [Verify your setup](#verify-your-setup) · [Troubleshooting](#troubleshooting) · [Release process](#release-process) · [Support and versioning](#support-and-versioning) · [Contributing and security](#contributing-and-security) · [License](#license)
 
 ## Why Kelpgate
 
@@ -136,6 +136,14 @@ For extra detail, enable `WP_DEBUG` and `WP_DEBUG_LOG`; blocked uploads are then
 ## Release process
 
 `./package.sh` builds `kelpgate-malware-scanner.zip` with a single top-level `kelpgate-malware-scanner/` folder, verifies the layout and writes a SHA-256 file. Pushing a `vX.Y.Z` tag that matches the plugin version runs the release workflow, which lints on PHP 7.4, builds the zip and publishes the release.
+
+## Support and versioning
+
+This project follows [Semantic Versioning](https://semver.org): breaking changes only in major versions, new features in minor versions, fixes in patch versions. Releases are tagged on GitHub, and user-visible changes are listed in the [changelog](readme.txt).
+
+Fixes, including security fixes, go into the latest release only, so upgrade to receive them. The tested runtime versions are listed under Compatibility. The plugin talks to version 1 of the Kelpgate API (`/api/v1`).
+
+For help, see [getting help](https://github.com/KelpGate/.github/blob/main/SUPPORT.md) or email support@kelpgate.cloud.
 
 ## Contributing and security
 
