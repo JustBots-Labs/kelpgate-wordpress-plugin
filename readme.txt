@@ -62,7 +62,7 @@ Privately: email security@kelpgate.cloud or follow the security policy at https:
 
 == External services ==
 
-This plugin sends files to the Kelpgate scanning service, an external hosted service operated by Kelpgate, to check them for malware. This is the plugin's core function.
+This plugin sends files to the Kelpgate scanning service, an external hosted service operated by JustBots Labs, to check them for malware. This is the plugin's core function.
 
 * **What is sent:** each uploaded file and its name, to the API URL you configure, over HTTPS. Your OAuth client ID and secret are sent to the token URL you configure, to obtain an access token.
 * **When:** during each upload, once an account is connected. Nothing is sent before that.
