@@ -377,8 +377,11 @@ class Kelpgate_Client {
 
         $boundary = wp_generate_password(24, false);
         $headers = array(
-            'Content-Type'  => 'multipart/form-data; boundary=' . $boundary,
-            'Authorization' => 'Bearer ' . $token,
+            'Content-Type'    => 'multipart/form-data; boundary=' . $boundary,
+            'Authorization'   => 'Bearer ' . $token,
+            // The service counts a request repeated under the same key only once, so a repeat of this
+            // scan (the retry below) is never counted against the quota twice. One key per scan.
+            'Idempotency-Key' => wp_generate_uuid4(),
         );
 
         $file_contents = file_get_contents($file_path);
