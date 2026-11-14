@@ -22,14 +22,14 @@ fail() { echo "package.sh: $*" >&2; exit 1; }
 # The version in the plugin header (what WordPress shows) must match the constant the code uses.
 HEADER_VERSION="$(sed -n 's/^ \* Version: *//p' "$SCRIPT_DIR/$MAIN" | head -1 | tr -d '[:space:]')"
 CONST_VERSION="$(sed -n "s/^define('KELPGATE_VERSION', '\([^']*\)');.*/\1/p" "$SCRIPT_DIR/$MAIN" | head -1)"
-[ -n "$HEADER_VERSION" ] || fail "no Version header found in $MAIN"
-[ "$HEADER_VERSION" = "$CONST_VERSION" ] || fail "header version ($HEADER_VERSION) differs from KELPGATE_VERSION ($CONST_VERSION)"
+[[ -n "$HEADER_VERSION" ]] || fail "no Version header found in $MAIN"
+[[ "$HEADER_VERSION" = "$CONST_VERSION" ]] || fail "header version ($HEADER_VERSION) differs from KELPGATE_VERSION ($CONST_VERSION)"
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 mkdir -p "$TMP_DIR/$SLUG" "$OUTPUT_DIR"
 for item in "${INCLUDE[@]}"; do
-  [ -e "$SCRIPT_DIR/$item" ] || fail "missing $item"
+  [[ -e "$SCRIPT_DIR/$item" ]] || fail "missing $item"
   cp -R "$SCRIPT_DIR/$item" "$TMP_DIR/$SLUG/"
 done
 find "$TMP_DIR" \( -name '.DS_Store' -o -name '*.log' \) -delete
@@ -41,7 +41,7 @@ rm -f "$ZIP" "$ZIP.sha256"
 # --- verify what will actually be uploaded ---
 LISTING="$(unzip -Z1 "$ZIP")"
 TOPS="$(printf '%s\n' "$LISTING" | cut -d/ -f1 | sort -u)"
-[ "$TOPS" = "$SLUG" ] || fail "zip must have one top-level folder named $SLUG, found: $TOPS"
+[[ "$TOPS" = "$SLUG" ]] || fail "zip must have one top-level folder named $SLUG, found: $TOPS"
 printf '%s\n' "$LISTING" | grep -qx "$SLUG/$MAIN" || fail "$SLUG/$MAIN is not at the top of the plugin folder"
 unzip -p "$ZIP" "$SLUG/$MAIN" | grep -q "^ \* Plugin Name:" || fail "plugin header missing from $MAIN"
 if printf '%s\n' "$LISTING" | grep -E "(^|/)(package\.sh|composer\.json|\.git[^/]*|\.github|dist)(/|$)" >/dev/null; then
