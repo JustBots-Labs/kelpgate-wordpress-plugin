@@ -6,6 +6,7 @@ The same history appears in `readme.txt`, which WordPress.org displays. Keep the
 
 - Load the settings page script through `wp_enqueue_script` instead of an inline script block (WordPress.org review).
 - Read `$_FILES` in one place, with each temporary path and file name validated or sanitized before use. Nested upload fields such as `a[b][]` are now scanned as well; before, they were skipped by the early request check.
+- Coding-standard clean-up: no silenced errors, no overridden WordPress globals, reasons documented where a discouraged function is needed.
 
 ## 1.0.13
 

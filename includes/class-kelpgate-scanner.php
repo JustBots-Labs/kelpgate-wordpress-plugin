@@ -57,7 +57,7 @@ class Kelpgate_Scanner {
 
         if (!$res['clean']) {
             $threat_name = self::format_threat_signature($res['signature']);
-            $this->log_security_incident($filename, $threat_name, $res['sha256'], $res['error']);
+            $this->log_security_incident($filename, $threat_name, $res['sha256']);
 
             // Set the WordPress error string to abort the upload cleanly with a minimal, non-leaking message
             $file['error'] = __('Security check failed: This file cannot be accepted.', 'kelpgate-malware-scanner');
@@ -205,7 +205,7 @@ class Kelpgate_Scanner {
 
         if (!$res['clean']) {
             $threat_name = self::format_threat_signature($res['signature']);
-            $this->log_security_incident($filename, $threat_name, $res['sha256'], $res['error']);
+            $this->log_security_incident($filename, $threat_name, $res['sha256']);
 
             // If a rogue script is about to move this file, destroy the infected temp file immediately
             wp_delete_file($tmp_name);
@@ -263,7 +263,7 @@ class Kelpgate_Scanner {
         return implode(', ', array_slice($unique_parts, 0, 2));
     }
 
-    private function log_security_incident($filename, $signature, $sha256, $details) {
+    private function log_security_incident($filename, $signature, $sha256) {
         if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only runs when WP_DEBUG and WP_DEBUG_LOG are both on.
             error_log(sprintf(
