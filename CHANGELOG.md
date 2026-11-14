@@ -2,6 +2,10 @@
 
 The same history appears in `readme.txt`, which WordPress.org displays. Keep the two in step.
 
+## 1.0.15
+
+- Cache and rate-limit keys use SHA-256 instead of MD5 (they were never a security use, but static analysis flags MD5). A cached access token is fetched again once after the update.
+
 ## 1.0.14
 
 - Load the settings page script through `wp_enqueue_script` instead of an inline script block (WordPress.org review).

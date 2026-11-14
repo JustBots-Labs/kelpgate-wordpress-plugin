@@ -14,9 +14,11 @@ if (!defined('ABSPATH')) {
  * (comma-separated IPs/CIDRs) or the `kelpgate_trusted_proxies` filter.
  */
 class Kelpgate_Client_IP {
+    // Loopback, private and link-local ranges that count as a trusted proxy by default. They are
+    // networks to match against, not addresses to connect to.
     private static $defaults = array(
-        '127.0.0.0/8', '::1/128', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
-        '169.254.0.0/16', 'fc00::/7', 'fe80::/10',
+        '127.0.0.0/8', '::1/128', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', // NOSONAR
+        '169.254.0.0/16', 'fc00::/7', 'fe80::/10', // NOSONAR
     );
 
     public static function get() {

@@ -4,7 +4,7 @@ Tags: malware, security, scanner, uploads, antivirus
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.14
+Stable tag: 1.0.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,9 @@ This plugin sends files to the Kelpgate scanning service, an external hosted ser
 * **Service:** https://kelpgate.cloud (API and console under kelpgate.cloud).
 
 == Changelog ==
+
+= 1.0.15 =
+* Cache and rate-limit keys use SHA-256 instead of MD5. Nothing to configure; a cached access token is simply fetched again once.
 
 = 1.0.14 =
 * Load the settings page script through wp_enqueue_script instead of an inline script block.

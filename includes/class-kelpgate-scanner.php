@@ -38,7 +38,7 @@ class Kelpgate_Scanner {
         }
 
         // Check if file was already evaluated in the deep request inspection layer
-        $cache_key = !empty($file['tmp_name']) ? md5($file['tmp_name']) : '';
+        $cache_key = !empty($file['tmp_name']) ? hash('sha256', $file['tmp_name']) : '';
         if ($cache_key && isset(self::$scanned_files[$cache_key])) {
             $cached = self::$scanned_files[$cache_key];
             if (!$cached['clean']) {
@@ -171,7 +171,7 @@ class Kelpgate_Scanner {
         }
 
         $ip    = Kelpgate_Client_IP::get();
-        $key   = 'kelpgate_rl_' . md5($ip);
+        $key   = 'kelpgate_rl_' . hash('sha256', $ip);
         $count = (int) get_transient($key);
 
         // $files counts files, not requests, so one request cannot carry an unbounded number of uploads.
@@ -194,7 +194,7 @@ class Kelpgate_Scanner {
             return;
         }
 
-        $cache_key = md5($tmp_name);
+        $cache_key = hash('sha256', $tmp_name);
         if (isset(self::$scanned_files[$cache_key])) {
             return;
         }

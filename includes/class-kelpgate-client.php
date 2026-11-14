@@ -163,8 +163,8 @@ class Kelpgate_Client {
             return new WP_Error('missing_credentials', __('OAuth2 Client ID or Client Secret is missing.', 'kelpgate-malware-scanner'));
         }
 
-        $cache_key = 'kelpgate_oauth_token_' . md5($client_id);
-        $lock_key  = 'kelpgate_oauth_lock_' . md5($client_id);
+        $cache_key = 'kelpgate_oauth_token_' . hash('sha256', $client_id);
+        $lock_key  = 'kelpgate_oauth_lock_' . hash('sha256', $client_id);
 
         // The cache holds the token plus its real expiry time. Older versions cached the bare token
         // string (treated as "valid, expiry unknown": it is used as before and replaced on expiry).
@@ -427,7 +427,7 @@ class Kelpgate_Client {
         // A revoked or rotated token would otherwise keep failing until the cached copy expires:
         // drop it and retry once with a fresh one.
         if ($status_code === 401 && $this->get_auth_mode() !== 'token') {
-            delete_transient('kelpgate_oauth_token_' . md5($this->get_client_id()));
+            delete_transient('kelpgate_oauth_token_' . hash('sha256', $this->get_client_id()));
             $fresh = $this->get_access_token();
             if (!is_wp_error($fresh)) {
                 $headers['Authorization'] = 'Bearer ' . $fresh;
