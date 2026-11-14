@@ -4,7 +4,7 @@ Tags: malware, security, scanner, uploads, antivirus
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.13
+Stable tag: 1.0.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,11 @@ This plugin sends files to the Kelpgate scanning service, an external hosted ser
 * **Service:** https://kelpgate.cloud (API and console under kelpgate.cloud).
 
 == Changelog ==
+
+= 1.0.14 =
+* Load the settings page script through wp_enqueue_script instead of an inline script block.
+* Read uploaded files through one validated, sanitized path. Nested upload fields (for example a[b][]) are now inspected too.
+* Coding-standard clean-up: no silenced errors, no overridden WordPress globals, reasons documented where a discouraged function is needed.
 
 = 1.0.13 =
 * Every scan now sends an Idempotency-Key, so a repeated request (for example the retry after a refreshed token) is not counted against your plan's quota twice. No settings to change.

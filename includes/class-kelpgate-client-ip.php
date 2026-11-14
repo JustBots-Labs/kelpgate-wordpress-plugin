@@ -68,8 +68,12 @@ class Kelpgate_Client_IP {
             return $ip === $cidr;
         }
         list($subnet, $bits) = explode('/', $cidr, 2);
-        $ip_bin  = @inet_pton($ip);
-        $net_bin = @inet_pton($subnet);
+        // inet_pton() warns on malformed input, so both sides are validated first instead of silencing it.
+        if (filter_var($ip, FILTER_VALIDATE_IP) === false || filter_var($subnet, FILTER_VALIDATE_IP) === false) {
+            return false;
+        }
+        $ip_bin  = inet_pton($ip);
+        $net_bin = inet_pton($subnet);
         if ($ip_bin === false || $net_bin === false || strlen($ip_bin) !== strlen($net_bin)) {
             return false;
         }

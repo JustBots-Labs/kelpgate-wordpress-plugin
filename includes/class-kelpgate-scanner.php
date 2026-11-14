@@ -57,7 +57,7 @@ class Kelpgate_Scanner {
 
         if (!$res['clean']) {
             $threat_name = self::format_threat_signature($res['signature']);
-            $this->log_security_incident($filename, $threat_name, $res['sha256'], $res['error']);
+            $this->log_security_incident($filename, $threat_name, $res['sha256']);
 
             // Set the WordPress error string to abort the upload cleanly with a minimal, non-leaking message
             $file['error'] = __('Security check failed: This file cannot be accepted.', 'kelpgate-malware-scanner');
@@ -70,15 +70,20 @@ class Kelpgate_Scanner {
      * Secondary defense: Inspects $_FILES on early 'init' to catch direct move_uploaded_file calls.
      */
     public function deep_inspect_raw_files() {
-        if (empty($_FILES) || !is_array($_FILES) || !$this->client->is_configured()) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
+        if (!$this->client->is_configured()) {
+            return;
+        }
+
+        $uploads = self::collect_uploads();
+        if (empty($uploads)) {
             return;
         }
 
         // Anonymous visitors can POST multipart data to any URL. Without a limit each file would
         // trigger a synchronous scan (worker exhaustion) and burn the shared scan quota.
-        if ($this->raw_scan_limit_exceeded()) {
-            foreach ($_FILES as $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
-                $this->discard_tmp_files($data);
+        if ($this->raw_scan_limit_exceeded(count($uploads))) {
+            foreach ($uploads as $upload) {
+                $this->discard_tmp_file($upload['tmp_name']);
             }
             if (!wp_doing_ajax() && !defined('REST_REQUEST')) {
                 wp_die(
@@ -91,17 +96,71 @@ class Kelpgate_Scanner {
             return;
         }
 
-        // Only scan when an actual file was posted
-        foreach ($_FILES as $field => $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
-            $this->inspect_file_array($data);
+        foreach ($uploads as $upload) {
+            $this->inspect_single_tmp_file($upload['tmp_name'], $upload['name']);
         }
+    }
+
+    /**
+     * Reads the posted files into a flat, validated list of temporary path and sanitized name.
+     *
+     * A scanner has to look at every upload whether or not the request carries a nonce, so $_FILES
+     * is read here and nowhere else. Nothing from it is used until it has been reduced to a string
+     * without control characters (tmp_name, which PHP itself generated) or passed through
+     * sanitize_file_name() (the client-chosen name). Nested field names (a[b][]) are followed to a
+     * fixed depth.
+     *
+     * @return array[] Each item: array('tmp_name' => string, 'name' => string).
+     */
+    private static function collect_uploads() {
+        $uploads = array();
+        if (empty($_FILES) || !is_array($_FILES)) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see the method description.
+            return $uploads;
+        }
+
+        foreach ($_FILES as $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- see the method description; values are validated in flatten_upload().
+            if (!is_array($data) || !isset($data['tmp_name'])) {
+                continue;
+            }
+            self::flatten_upload($data['tmp_name'], isset($data['name']) ? $data['name'] : '', $uploads, 0);
+        }
+        return $uploads;
+    }
+
+    /**
+     * @param mixed   $tmp     A tmp_name value: a string, or an array of them for multi-file fields.
+     * @param mixed   $name    The matching name value or array.
+     * @param array[] $uploads Collected items (by reference).
+     * @param int     $depth   Current nesting depth.
+     */
+    private static function flatten_upload($tmp, $name, array &$uploads, $depth) {
+        if (is_array($tmp)) {
+            if ($depth >= 4) {
+                return;
+            }
+            foreach ($tmp as $key => $value) {
+                $child_name = (is_array($name) && isset($name[$key])) ? $name[$key] : '';
+                self::flatten_upload($value, $child_name, $uploads, $depth + 1);
+            }
+            return;
+        }
+
+        if (!is_string($tmp) || $tmp === '' || preg_match('/[\x00-\x1f]/', $tmp)) {
+            return;
+        }
+
+        $clean_name = is_string($name) ? sanitize_file_name($name) : '';
+        $uploads[]  = array(
+            'tmp_name' => $tmp,
+            'name'     => ($clean_name !== '') ? $clean_name : 'file.bin',
+        );
     }
 
     /**
      * Per-IP limit on raw-upload scans for visitors who cannot upload through WordPress itself.
      * Users with the upload_files capability are exempt. Filter: kelpgate_raw_scan_limit_per_minute.
      */
-    private function raw_scan_limit_exceeded() {
+    private function raw_scan_limit_exceeded($files) {
         if (is_user_logged_in() && current_user_can('upload_files')) {
             return false;
         }
@@ -115,14 +174,7 @@ class Kelpgate_Scanner {
         $key   = 'kelpgate_rl_' . md5($ip);
         $count = (int) get_transient($key);
 
-        // Count files, not requests, so one request cannot carry an unbounded number of uploads.
-        $files = 0;
-        foreach ($_FILES as $data) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- A scanner must inspect every upload whether or not a nonce is present; $_FILES is only read to scan it.
-            if (isset($data['tmp_name'])) {
-                $files += is_array($data['tmp_name']) ? count($data['tmp_name']) : 1;
-            }
-        }
-
+        // $files counts files, not requests, so one request cannot carry an unbounded number of uploads.
         if ($count + $files > $limit) {
             return true;
         }
@@ -131,37 +183,9 @@ class Kelpgate_Scanner {
         return false;
     }
 
-    private function discard_tmp_files($data) {
-        if (!isset($data['tmp_name'])) {
-            return;
-        }
-        $paths = is_array($data['tmp_name']) ? $data['tmp_name'] : array($data['tmp_name']);
-        foreach ($paths as $p) {
-            if (is_string($p) && $p !== '' && file_exists($p)) {
-                wp_delete_file($p);
-            }
-        }
-    }
-
-    private function inspect_file_array($data) {
-        if (!isset($data['tmp_name'])) {
-            return;
-        }
-
-        // Handle single file upload
-        if (is_string($data['tmp_name'])) {
-            $this->inspect_single_tmp_file($data['tmp_name'], isset($data['name']) ? $data['name'] : 'file.bin');
-            return;
-        }
-
-        // Handle multi-file array upload (e.g. files[][tmp_name])
-        if (is_array($data['tmp_name'])) {
-            foreach ($data['tmp_name'] as $idx => $tmp_path) {
-                if (is_string($tmp_path)) {
-                    $name = isset($data['name'][$idx]) ? $data['name'][$idx] : 'file.bin';
-                    $this->inspect_single_tmp_file($tmp_path, $name);
-                }
-            }
+    private function discard_tmp_file($path) {
+        if (is_string($path) && $path !== '' && file_exists($path)) {
+            wp_delete_file($path);
         }
     }
 
@@ -181,7 +205,7 @@ class Kelpgate_Scanner {
 
         if (!$res['clean']) {
             $threat_name = self::format_threat_signature($res['signature']);
-            $this->log_security_incident($filename, $threat_name, $res['sha256'], $res['error']);
+            $this->log_security_incident($filename, $threat_name, $res['sha256']);
 
             // If a rogue script is about to move this file, destroy the infected temp file immediately
             wp_delete_file($tmp_name);
@@ -239,7 +263,7 @@ class Kelpgate_Scanner {
         return implode(', ', array_slice($unique_parts, 0, 2));
     }
 
-    private function log_security_incident($filename, $signature, $sha256, $details) {
+    private function log_security_incident($filename, $signature, $sha256) {
         if (defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only runs when WP_DEBUG and WP_DEBUG_LOG are both on.
             error_log(sprintf(

@@ -46,6 +46,31 @@ class Kelpgate_Admin {
             array(),
             $css_ver
         );
+
+        $js_ver = defined('KELPGATE_VERSION') ? KELPGATE_VERSION : '0';
+        $js_path = KELPGATE_PLUGIN_DIR . 'assets/admin.js';
+        if (file_exists($js_path)) {
+            $js_ver .= '.' . filemtime($js_path);
+        }
+        wp_enqueue_script(
+            'kelpgate-admin-js',
+            KELPGATE_PLUGIN_URL . 'assets/admin.js',
+            array(),
+            $js_ver,
+            true
+        );
+        wp_localize_script('kelpgate-admin-js', 'kelpgateAdmin', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('kelpgate_admin_nonce'),
+            'i18n'    => array(
+                'connected'    => __('Connected: ', 'kelpgate-malware-scanner'),
+                'error'        => __('Error: ', 'kelpgate-malware-scanner'),
+                'failed'       => __('Connection test failed.', 'kelpgate-malware-scanner'),
+                'networkError' => __('Network Error: ', 'kelpgate-malware-scanner'),
+                /* translators: 1: first threat on this page, 2: last threat on this page, 3: total number of threats. */
+                'showing'      => __('Showing %1$d–%2$d of %3$d threats', 'kelpgate-malware-scanner'),
+            ),
+        ));
     }
 
     public function add_action_links($links) {
@@ -374,140 +399,6 @@ class Kelpgate_Admin {
             </div>
         </div>
 
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var authMode = document.getElementById('kelpgate_auth_mode');
-            function toggleAuthRows() {
-                var isOAuth = authMode.value === 'oauth2';
-                document.querySelectorAll('.kelpgate-row-oauth2').forEach(function(el) { el.style.display = isOAuth ? '' : 'none'; });
-                document.querySelectorAll('.kelpgate-row-token').forEach(function(el) { el.style.display = isOAuth ? 'none' : ''; });
-            }
-            if (authMode) {
-                authMode.addEventListener('change', toggleAuthRows);
-                toggleAuthRows();
-            }
-
-            var btn = document.getElementById('kelpgate-test-btn');
-            var icon = document.getElementById('kelpgate-test-icon');
-            var banner = document.getElementById('kelpgate-banner');
-            var bannerText = document.getElementById('kelpgate-banner-text');
-
-            // Build the banner with text nodes only: the message can contain text returned by the
-            // token/scan endpoints, which must never be interpreted as HTML.
-            function setBanner(label, text) {
-                bannerText.textContent = '';
-                var strong = document.createElement('strong');
-                strong.textContent = label;
-                bannerText.appendChild(strong);
-                bannerText.appendChild(document.createTextNode(String(text)));
-            }
-
-            if (btn) {
-                btn.addEventListener('click', function() {
-                    btn.disabled = true;
-                    icon.classList.add('kelpgate-spinning');
-
-                    var data = new FormData();
-                    data.append('action', 'kelpgate_test_connection');
-                    data.append('security', '<?php echo esc_js(wp_create_nonce('kelpgate_admin_nonce')); ?>');
-
-                    fetch(ajaxurl, {
-                        method: 'POST',
-                        body: data
-                    })
-                    .then(function(r) { return r.json(); })
-                    .then(function(json) {
-                        btn.disabled = false;
-                        icon.classList.remove('kelpgate-spinning');
-                        banner.style.display = 'flex';
-
-                        if (json.success && json.data && json.data.success) {
-                            banner.className = 'kelpgate-banner healthy';
-                            setBanner('<?php echo esc_js(__('Connected: ', 'kelpgate-malware-scanner')); ?>', json.data.message);
-                        } else {
-                            var msg = (json.data && json.data.message) ? json.data.message : '<?php echo esc_js(__('Connection test failed.', 'kelpgate-malware-scanner')); ?>';
-                            banner.className = 'kelpgate-banner error';
-                            setBanner('<?php echo esc_js(__('Error: ', 'kelpgate-malware-scanner')); ?>', msg);
-                        }
-                    })
-                    .catch(function(err) {
-                        btn.disabled = false;
-                        icon.classList.remove('kelpgate-spinning');
-                        banner.style.display = 'flex';
-                        banner.className = 'kelpgate-banner error';
-                        setBanner('<?php echo esc_js(__('Network Error: ', 'kelpgate-malware-scanner')); ?>', err.message);
-                    });
-                });
-            }
-
-            // Incident Log Dynamic Pagination
-            var incidentsBody = document.getElementById('kelpgate-incidents-body');
-            if (incidentsBody) {
-                var PAGE_SIZE = 10;
-                var rows = Array.prototype.slice.call(incidentsBody.querySelectorAll('tr'));
-                var totalRows = rows.length;
-                var totalPages = Math.ceil(totalRows / PAGE_SIZE);
-                var currentPage = 1;
-
-                function updateIncidentPagination(page) {
-                    currentPage = page;
-                    var start = (page - 1) * PAGE_SIZE;
-                    var end = start + PAGE_SIZE;
-
-                    rows.forEach(function(row, idx) {
-                        row.style.display = (idx >= start && idx < end) ? '' : 'none';
-                    });
-
-                    var infoEl = document.getElementById('kelpgate-page-info');
-                    if (infoEl) {
-                        var displayEnd = Math.min(end, totalRows);
-                        infoEl.textContent = 'Showing ' + (start + 1) + '–' + displayEnd + ' of ' + totalRows + ' threats';
-                    }
-
-                    var prevBtn = document.getElementById('kelpgate-prev-btn');
-                    if (prevBtn) prevBtn.disabled = (currentPage <= 1);
-
-                    var nextBtn = document.getElementById('kelpgate-next-btn');
-                    if (nextBtn) nextBtn.disabled = (currentPage >= totalPages);
-
-                    var pageNums = document.getElementById('kelpgate-page-numbers');
-                    if (pageNums) {
-                        pageNums.innerHTML = '';
-                        for (var i = 1; i <= totalPages; i++) {
-                            var pBtn = document.createElement('button');
-                            pBtn.type = 'button';
-                            var isActive = (i === currentPage);
-                            pBtn.className = 'kelpgate-page-num' + (isActive ? ' active' : '');
-                            pBtn.style.cssText = 'min-width:30px;height:30px;padding:0 6px;font-size:12px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;margin:0;box-sizing:border-box;' +
-                                (isActive ? 'background:var(--kg-accent,#0284C7);color:#ffffff;border:1px solid var(--kg-accent,#0284C7);' : 'background:var(--kg-surface,#ffffff);color:var(--kg-text-2,#475569);border:1px solid var(--kg-border,#E2E8F0);');
-                            pBtn.textContent = i;
-                            pBtn.setAttribute('data-page', i);
-                            pBtn.addEventListener('click', function(e) {
-                                updateIncidentPagination(parseInt(e.currentTarget.getAttribute('data-page'), 10));
-                            });
-                            pageNums.appendChild(pBtn);
-                        }
-                    }
-                }
-
-                if (totalRows > PAGE_SIZE) {
-                    updateIncidentPagination(1);
-                    var prevBtn = document.getElementById('kelpgate-prev-btn');
-                    if (prevBtn) {
-                        prevBtn.addEventListener('click', function() {
-                            if (currentPage > 1) updateIncidentPagination(currentPage - 1);
-                        });
-                    }
-                    var nextBtn = document.getElementById('kelpgate-next-btn');
-                    if (nextBtn) {
-                        nextBtn.addEventListener('click', function() {
-                            if (currentPage < totalPages) updateIncidentPagination(currentPage + 1);
-                        });
-                    }
-                }
-            }
-        });
-        </script>
         <?php
     }
 }

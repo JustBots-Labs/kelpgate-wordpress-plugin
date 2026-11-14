@@ -21,8 +21,8 @@ function kelpgate_malware_scanner_uninstall_site() {
 }
 
 if (is_multisite()) {
-    foreach (get_sites(array('fields' => 'ids', 'number' => 0)) as $blog_id) {
-        switch_to_blog($blog_id);
+    foreach (get_sites(array('fields' => 'ids', 'number' => 0)) as $kelpgate_site_id) {
+        switch_to_blog($kelpgate_site_id);
         kelpgate_malware_scanner_uninstall_site();
         restore_current_blog();
     }

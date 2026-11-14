@@ -218,7 +218,7 @@ class Kelpgate_Client {
             'timeout'   => 15,
             'sslverify' => true,
             'headers'   => array(
-                'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret),
+                'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- HTTP Basic client authentication for the OAuth2 token request (RFC 6749 section 2.3.1), not obfuscation.
                 'Content-Type'  => 'application/x-www-form-urlencoded',
             ),
             'body'      => array(
@@ -384,7 +384,7 @@ class Kelpgate_Client {
             'Idempotency-Key' => wp_generate_uuid4(),
         );
 
-        $file_contents = file_get_contents($file_path);
+        $file_contents = file_get_contents($file_path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reads the local temporary upload; wp_remote_get() is for remote URLs.
         if ($file_contents === false) {
             return array(
                 'clean'     => false,
