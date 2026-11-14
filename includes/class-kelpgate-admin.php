@@ -124,7 +124,7 @@ class Kelpgate_Admin {
         $clean['timeout_seconds'] = !empty($input['timeout_seconds']) ? max(5, min(300, intval($input['timeout_seconds']))) : 45;
 
         if (!empty($clean['client_id'])) {
-            delete_transient('kelpgate_oauth_token_' . md5($clean['client_id']));
+            delete_transient('kelpgate_oauth_token_' . hash('sha256', $clean['client_id']));
         }
 
         return $clean;
